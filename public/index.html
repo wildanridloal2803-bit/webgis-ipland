@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT IPLand | Hunian Syariah & WebGIS</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Animasi Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom Map Z-Index */
+        #public-map { z-index: 10; }
+        
+        /* Hero Background dengan Overlay */
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-emerald-200">
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="container mx-auto px-6 lg:px-12 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-bold shadow-lg">IP</div>
+                <span id="nav-brand" class="text-xl font-bold text-white tracking-wide transition-colors">IP<span class="text-emerald-400">Land</span></span>
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#beranda" class="nav-link text-white font-medium hover:text-emerald-400 transition-colors">Beranda</a>
+                <a href="#katalog" class="nav-link text-white font-medium hover:text-emerald-400 transition-colors">Katalog Properti</a>
+                <a href="#webgis" class="nav-link text-white font-medium hover:text-emerald-400 transition-colors">Peta Lokasi</a>
+                <a href="https://wa.me/6287786885250" class="bg-emerald-500 text-white px-5 py-2 rounded-full font-semibold hover:bg-emerald-600 transition-colors shadow-lg">Hubungi Kami</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="beranda" class="hero-bg relative h-screen flex items-center justify-center">
+        <!-- Overlay Gelap -->
+        <div class="absolute inset-0 bg-slate-900/60"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-16 reveal">
+            <span class="inline-block py-1 px-3 rounded-full bg-emerald-500/20 text-emerald-300 backdrop-blur-md border border-emerald-500/30 text-sm font-semibold tracking-wider mb-6">100% SYARIAH, TANPA RIBA</span>
+            <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight mb-6">Wujudkan Hunian Impian Penuh Berkah</h1>
+            <p class="text-lg md:text-xl text-slate-200 mb-10 max-w-2xl mx-auto">Sistem cerdas WebGIS kami membantu Anda menemukan lokasi kavling dan rumah terbaik di Jatisampurna secara transparan dan interaktif.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#katalog" class="px-8 py-4 bg-emerald-500 text-white rounded-full font-bold text-lg hover:bg-emerald-600 transition-all shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1">Lihat Katalog</a>
+                <a href="#webgis" class="px-8 py-4 bg-white/10 text-white backdrop-blur-md border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 transition-all">Buka Peta Lokasi</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TENTANG & KEUNGGULAN -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Mengapa Memilih PT IPLand?</h2>
+                <div class="w-20 h-1 bg-emerald-500 mx-auto rounded-full mb-6"></div>
+                <p class="text-slate-500">Kami tidak hanya membangun rumah, tapi membangun peradaban keluarga islami dengan skema pembayaran yang menenangkan jiwa.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 text-center reveal hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-hand-holding-dollar"></i></div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Tanpa Bank & BI Checking</h3>
+                    <p class="text-slate-500 text-sm">Proses mudah langsung ke developer. Tanpa denda, tanpa sita, dan tanpa asuransi yang memberatkan.</p>
+                </div>
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 text-center reveal hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-map-location-dot"></i></div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Transparansi WebGIS</h3>
+                    <p class="text-slate-500 text-sm">Lihat langsung ketersediaan kavling secara real-time melalui peta digital interaktif kami.</p>
+                </div>
+                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-100 text-center reveal hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-mosque"></i></div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Lingkungan Islami</h3>
+                    <p class="text-slate-500 text-sm">Fasilitas masjid terdekat, rumah tahfidz, dan tetangga yang berkualitas untuk tumbuh kembang anak.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KATALOG PRODUK -->
+    <section id="katalog" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                <div class="max-w-xl">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Katalog Tipe Hunian</h2>
+                    <div class="w-20 h-1 bg-emerald-500 rounded-full mb-6"></div>
+                    <p class="text-slate-500">Pilih desain rumah bergaya minimalis modern yang dirancang khusus untuk kenyamanan dan privasi keluarga muslim.</p>
+                </div>
+            </div>
+
+            <!-- Grid Katalog -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal group hover:shadow-xl transition-all duration-300">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tipe Zamzam" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">Terlaris</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Tipe Zamzam (45/90)</h3>
+                        <p class="text-emerald-600 font-bold text-xl mb-4">Rp 650.000.000</p>
+                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 border-y border-slate-100 py-3">
+                            <span class="flex items-center gap-1"><i class="fas fa-bed"></i> 2 Kamar</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-bath"></i> 1 K.Mandi</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-car"></i> Carport</span>
+                        </div>
+                        <button class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors">Lihat Detail Lokasi</button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal group hover:shadow-xl transition-all duration-300" style="transition-delay: 100ms;">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tipe Firdaus" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Tipe Firdaus (60/120)</h3>
+                        <p class="text-emerald-600 font-bold text-xl mb-4">Rp 850.000.000</p>
+                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 border-y border-slate-100 py-3">
+                            <span class="flex items-center gap-1"><i class="fas fa-bed"></i> 3 Kamar</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-bath"></i> 2 K.Mandi</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-car"></i> Carport</span>
+                        </div>
+                        <button class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors">Lihat Detail Lokasi</button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal group hover:shadow-xl transition-all duration-300" style="transition-delay: 200ms;">
+                    <div class="h-60 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kavling Siap Bangun" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">Terbatas</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Kavling Siap Bangun</h3>
+                        <p class="text-emerald-600 font-bold text-xl mb-4">Mulai Rp 350.000.000</p>
+                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 border-y border-slate-100 py-3">
+                            <span class="flex items-center gap-1"><i class="fas fa-vector-square"></i> Luas: 72m² - 120m²</span>
+                        </div>
+                        <button class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors">Lihat Detail Lokasi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WEBGIS / PETA INTERAKTIF SECTION -->
+    <section id="webgis" class="py-20 bg-white">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center max-w-3xl mx-auto mb-12 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Peta Sebaran WebGIS</h2>
+                <div class="w-20 h-1 bg-emerald-500 mx-auto rounded-full mb-6"></div>
+                <p class="text-slate-500">Cek posisi kavling, arah mata angin, dan ketersediaan unit secara langsung. <br>Tanda hijau berarti kavling masih tersedia untuk Anda.</p>
+            </div>
+
+            <!-- Container Peta -->
+            <div class="bg-slate-50 p-3 rounded-3xl shadow-lg border border-slate-200 reveal relative">
+                
+                <!-- Legend Status -->
+                <div class="absolute top-6 right-6 z-20 bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg border border-slate-100 hidden md:block">
+                    <h4 class="text-sm font-bold text-slate-800 mb-3 border-b border-slate-100 pb-2">Keterangan Status</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-emerald-500"></div> <span class="text-slate-600">Tersedia</span></div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-amber-500"></div> <span class="text-slate-600">Booking</span></div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-rose-500"></div> <span class="text-slate-600">Terjual</span></div>
+                    </div>
+                </div>
+
+                <!-- Element Peta -->
+                <div id="public-map" class="w-full h-[500px] md:h-[600px] rounded-2xl border-2 border-white shadow-inner z-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="kontak" class="bg-slate-900 text-slate-300 py-16 border-t-4 border-emerald-500">
+        <div class="container mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div>
+                <a href="#" class="flex items-center gap-2 mb-6">
+                    <div class="w-8 h-8 bg-emerald-500 rounded flex items-center justify-center text-white font-bold">IP</div>
+                    <span class="text-xl font-bold text-white tracking-wide">IP<span class="text-emerald-500">Land</span></span>
+                </a>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">Developer properti syariah terpercaya di Kota Bekasi. Mewujudkan hunian nyaman tanpa riba untuk keluarga muslim masa depan.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-lg mb-6">Tautan Cepat</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#beranda" class="hover:text-emerald-400 transition-colors">Beranda</a></li>
+                    <li><a href="#katalog" class="hover:text-emerald-400 transition-colors">Katalog Properti</a></li>
+                    <li><a href="#webgis" class="hover:text-emerald-400 transition-colors">Peta Interaktif WebGIS</a></li>
+                    <li><a href="/login" class="hover:text-emerald-400 transition-colors">Portal Admin</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-lg mb-6">Hubungi Kami</h4>
+                <ul class="space-y-4 text-sm text-slate-400">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt mt-1 text-emerald-500"></i>
+                        <span>Jl. Alternatif Cibubur, Jatisampurna, Kota Bekasi, Jawa Barat 17433</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fas fa-phone-alt text-emerald-500"></i>
+                        <span>+62 877-8688-5250</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i class="fas fa-envelope text-emerald-500"></i>
+                        <span>marketing@ipland.co.id</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container mx-auto px-6 lg:px-12 mt-12 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
+            &copy; 2026 PT IPLand Property Syariah. All rights reserved. <br> WebGIS System Powered by Express.js
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // ==========================================
+        // 1. EFEK NAVBAR TRANSPARAN SAAT SCROLL
+        // ==========================================
+        const navbar = document.getElementById('navbar');
+        const navBrand = document.getElementById('nav-brand');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white', 'shadow-md', 'py-3');
+                navbar.classList.remove('bg-transparent', 'py-4');
+                navBrand.classList.replace('text-white', 'text-slate-800');
+                navLinks.forEach(link => {
+                    link.classList.replace('text-white', 'text-slate-600');
+                });
+            } else {
+                navbar.classList.add('bg-transparent', 'py-4');
+                navbar.classList.remove('bg-white', 'shadow-md', 'py-3');
+                navBrand.classList.replace('text-slate-800', 'text-white');
+                navLinks.forEach(link => {
+                    link.classList.replace('text-slate-600', 'text-white');
+                });
+            }
+        });
+
+        // ==========================================
+        // 2. ANIMASI SCROLL REVEAL (INTERSECTION OBSERVER)
+        // ==========================================
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // Panggil sekali saat load
+
+        // ==========================================
+        // 3. INISIALISASI WEBGIS PADA HALAMAN PUBLIK
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Setup Peta Dasar
+            const map = L.map('public-map').setView([-6.3761, 106.9242], 16);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            // Data Dummy (Nanti diganti dengan fetch API dari /api/hunian)
+            const dbHunian = [
+                { id: 1, nama_tipe: 'Tipe Zamzam 45/90', harga: 650000000, status: 'Tersedia', lat: -6.3761, lng: 106.9242 },
+                { id: 2, nama_tipe: 'Tipe Firdaus 60/120', harga: 850000000, status: 'Terjual', lat: -6.3755, lng: 106.9250 },
+                { id: 3, nama_tipe: 'Tipe Kautsar 36/72', harga: 450000000, status: 'Booking', lat: -6.3770, lng: 106.9230 }
+            ];
+
+            // Render Marker
+            dbHunian.forEach(item => {
+                let color = item.status === 'Terjual' ? '#e11d48' : (item.status === 'Booking' ? '#f59e0b' : '#10b981');
+                
+                const customIcon = L.divIcon({
+                    className: 'custom-icon',
+                    html: `
+                        <div class="relative group cursor-pointer">
+                            <div style="background-color:${color};" class="w-6 h-6 rounded-full border-4 border-white shadow-md animate-pulse"></div>
+                            <div style="background-color:${color};" class="absolute inset-0 rounded-full opacity-50 animate-ping"></div>
+                        </div>
+                    `,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+
+                // Tampilan Popup Publik yang Menarik
+                const popupContent = `
+                    <div class="min-w-[200px] font-sans">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=300&q=80" class="w-full h-24 object-cover rounded-t-lg mb-2" alt="${item.nama_tipe}">
+                        <div class="px-2 pb-2">
+                            <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mb-1 uppercase">${item.status}</span>
+                            <h3 class="font-bold text-slate-800 text-base leading-tight mb-1">${item.nama_tipe}</h3>
+                            <p class="text-emerald-600 font-bold text-sm mb-3">Rp ${parseInt(item.harga).toLocaleString('id-ID')}</p>
+                            ${item.status === 'Tersedia' 
+                                ? `<a href="#kontak" class="block text-center w-full bg-emerald-500 text-white text-xs py-2 rounded hover:bg-emerald-600 transition">Booking Sekarang</a>` 
+                                : `<button class="w-full bg-slate-200 text-slate-500 text-xs py-2 rounded cursor-not-allowed">Unit Tidak Tersedia</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+
+                L.marker([item.lat, item.lng], {icon: customIcon})
+                    .bindPopup(popupContent, {
+                        closeButton: false,
+                        className: 'custom-popup'
+                    })
+                    .addTo(map);
+            });
+        });
+    </script>
+</body>
+</html>
