@@ -28,6 +28,12 @@
         
         /* Custom Map Z-Index */
         #public-map { z-index: 10; }
+        .leaflet-control-layers {
+            border: 0 !important;
+            border-radius: 14px !important;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16) !important;
+            overflow: hidden;
+        }
         
         /* Hero Background dengan Overlay */
         .hero-bg {
@@ -105,71 +111,25 @@
     </section>
 
     <!-- KATALOG PRODUK -->
-    <section id="katalog" class="py-20 bg-slate-50">
-        <div class="container mx-auto px-6 lg:px-12">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
-                <div class="max-w-xl">
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Katalog Tipe Hunian</h2>
-                    <div class="w-20 h-1 bg-emerald-500 rounded-full mb-6"></div>
-                    <p class="text-slate-500">Pilih desain rumah bergaya minimalis modern yang dirancang khusus untuk kenyamanan dan privasi keluarga muslim.</p>
-                </div>
-            </div>
-
-            <!-- Grid Katalog -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal group hover:shadow-xl transition-all duration-300">
-                    <div class="h-60 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tipe Zamzam" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-4 left-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">Terlaris</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">Tipe Zamzam (45/90)</h3>
-                        <p class="text-emerald-600 font-bold text-xl mb-4">Rp 650.000.000</p>
-                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 border-y border-slate-100 py-3">
-                            <span class="flex items-center gap-1"><i class="fas fa-bed"></i> 2 Kamar</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-bath"></i> 1 K.Mandi</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-car"></i> Carport</span>
-                        </div>
-                        <button class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors">Lihat Detail Lokasi</button>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal group hover:shadow-xl transition-all duration-300" style="transition-delay: 100ms;">
-                    <div class="h-60 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tipe Firdaus" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">Tipe Firdaus (60/120)</h3>
-                        <p class="text-emerald-600 font-bold text-xl mb-4">Rp 850.000.000</p>
-                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 border-y border-slate-100 py-3">
-                            <span class="flex items-center gap-1"><i class="fas fa-bed"></i> 3 Kamar</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-bath"></i> 2 K.Mandi</span>
-                            <span class="flex items-center gap-1"><i class="fas fa-car"></i> Carport</span>
-                        </div>
-                        <button class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors">Lihat Detail Lokasi</button>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal group hover:shadow-xl transition-all duration-300" style="transition-delay: 200ms;">
-                    <div class="h-60 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kavling Siap Bangun" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">Terbatas</div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">Kavling Siap Bangun</h3>
-                        <p class="text-emerald-600 font-bold text-xl mb-4">Mulai Rp 350.000.000</p>
-                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 border-y border-slate-100 py-3">
-                            <span class="flex items-center gap-1"><i class="fas fa-vector-square"></i> Luas: 72m² - 120m²</span>
-                        </div>
-                        <button class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors">Lihat Detail Lokasi</button>
-                    </div>
-                </div>
+<section id="katalog" class="py-20 bg-slate-50">
+    <div class="container mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+            <div class="max-w-xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Katalog Tipe Hunian</h2>
+                <div class="w-20 h-1 bg-emerald-500 rounded-full mb-6"></div>
+                <p class="text-slate-500">Pilih desain rumah bergaya minimalis modern yang dirancang khusus untuk kenyamanan dan privasi keluarga muslim.</p>
             </div>
         </div>
-    </section>
+
+        <!-- Wadah Katalog (Kosongkan isinya, akan diisi oleh Vanilla JS) -->
+        <div id="katalog-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-3 text-center py-10 text-slate-500">
+                <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
+                <p>Memuat data katalog properti terbaru...</p>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- WEBGIS / PETA INTERAKTIF SECTION -->
     <section id="webgis" class="py-20 bg-white">
@@ -250,106 +210,220 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
-        // ==========================================
-        // 1. EFEK NAVBAR TRANSPARAN SAAT SCROLL
-        // ==========================================
-        const navbar = document.getElementById('navbar');
-        const navBrand = document.getElementById('nav-brand');
-        const navLinks = document.querySelectorAll('.nav-link');
+       // ==========================================
+// 1. EFEK NAVBAR TRANSPARAN SAAT SCROLL
+// ==========================================
+const navbar = document.getElementById('navbar');
+const navBrand = document.getElementById('nav-brand');
+const navLinks = document.querySelectorAll('.nav-link');
 
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('bg-white', 'shadow-md', 'py-3');
-                navbar.classList.remove('bg-transparent', 'py-4');
-                navBrand.classList.replace('text-white', 'text-slate-800');
-                navLinks.forEach(link => {
-                    link.classList.replace('text-white', 'text-slate-600');
-                });
-            } else {
-                navbar.classList.add('bg-transparent', 'py-4');
-                navbar.classList.remove('bg-white', 'shadow-md', 'py-3');
-                navBrand.classList.replace('text-slate-800', 'text-white');
-                navLinks.forEach(link => {
-                    link.classList.replace('text-slate-600', 'text-white');
-                });
-            }
-        });
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        navbar.classList.add('bg-white', 'shadow-md', 'py-3');
+        navbar.classList.remove('bg-transparent', 'py-4');
+        navBrand.classList.replace('text-white', 'text-slate-800');
+        navLinks.forEach(link => link.classList.replace('text-white', 'text-slate-600'));
+    } else {
+        navbar.classList.add('bg-transparent', 'py-4');
+        navbar.classList.remove('bg-white', 'shadow-md', 'py-3');
+        navBrand.classList.replace('text-slate-800', 'text-white');
+        navLinks.forEach(link => link.classList.replace('text-slate-600', 'text-white'));
+    }
+});
 
-        // ==========================================
-        // 2. ANIMASI SCROLL REVEAL (INTERSECTION OBSERVER)
-        // ==========================================
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100;
+function reveal() {
+    document.querySelectorAll(".reveal").forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active");
+    });
+}
+window.addEventListener("scroll", reveal);
+reveal();
 
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
-            }
+// ==========================================
+// 2. INTEGRASI API, WEBGIS, DAN KATALOG
+// ==========================================
+let publicMap;
+let markerLayar = {}; // Menyimpan referensi marker agar bisa dibuka dari katalog
+const defaultCenter = [-6.3761, 106.9242];
+
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    }[char]));
+}
+
+function formatRupiah(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number.toLocaleString('id-ID') : '0';
+}
+
+function buildDirectionsUrl(item) {
+    if (item.rute_url) return item.rute_url;
+    const latitude = Number(item.latitude);
+    const longitude = Number(item.longitude);
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return '';
+    return `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+}
+
+function createBaseLayers() {
+    const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap'
+    });
+
+    const googleRoadmap = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '&copy; Google Maps'
+    });
+
+    const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '&copy; Google Maps'
+    });
+
+    return { carto, googleRoadmap, googleSatellite };
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Inisialisasi Peta
+    const baseLayers = createBaseLayers();
+    publicMap = L.map('public-map', { layers: [baseLayers.googleRoadmap] }).setView(defaultCenter, 16);
+    L.control.layers({
+        'Google Maps': baseLayers.googleRoadmap,
+        'Google Satelit': baseLayers.googleSatellite,
+        'Peta Ringan': baseLayers.carto
+    }, null, { position: 'topleft' }).addTo(publicMap);
+
+    try {
+        // AMBIL DATA DARI DATABASE (API EXPRESS)
+        const response = await fetch('/api/hunian');
+        const result = await response.json();
+        
+        if(result.success) {
+            renderKatalog(result.data);
+            renderPeta(result.data);
         }
-        window.addEventListener("scroll", reveal);
-        reveal(); // Panggil sekali saat load
+    } catch (error) {
+        console.error("Gagal terhubung ke database:", error);
+        document.getElementById('katalog-container').innerHTML = `<p class="col-span-3 text-center text-rose-500 font-bold">Gagal memuat data dari server.</p>`;
+    }
+});
 
-        // ==========================================
-        // 3. INISIALISASI WEBGIS PADA HALAMAN PUBLIK
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Setup Peta Dasar
-            const map = L.map('public-map').setView([-6.3761, 106.9242], 16);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
+// Fungsi Merender Kartu Katalog
+function renderKatalog(data) {
+    const container = document.getElementById('katalog-container');
+    container.innerHTML = ''; // Kosongkan animasi loading
 
-            // Data Dummy (Nanti diganti dengan fetch API dari /api/hunian)
-            const dbHunian = [
-                { id: 1, nama_tipe: 'Tipe Zamzam 45/90', harga: 650000000, status: 'Tersedia', lat: -6.3761, lng: 106.9242 },
-                { id: 2, nama_tipe: 'Tipe Firdaus 60/120', harga: 850000000, status: 'Terjual', lat: -6.3755, lng: 106.9250 },
-                { id: 3, nama_tipe: 'Tipe Kautsar 36/72', harga: 450000000, status: 'Booking', lat: -6.3770, lng: 106.9230 }
-            ];
+    // Tampilkan 6 data terbaru/tersedia saja di halaman depan agar rapi
+    const dataTampil = data.slice(0, 6);
 
-            // Render Marker
-            dbHunian.forEach(item => {
-                let color = item.status === 'Terjual' ? '#e11d48' : (item.status === 'Booking' ? '#f59e0b' : '#10b981');
-                
-                const customIcon = L.divIcon({
-                    className: 'custom-icon',
-                    html: `
-                        <div class="relative group cursor-pointer">
-                            <div style="background-color:${color};" class="w-6 h-6 rounded-full border-4 border-white shadow-md animate-pulse"></div>
-                            <div style="background-color:${color};" class="absolute inset-0 rounded-full opacity-50 animate-ping"></div>
-                        </div>
-                    `,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
-                });
+    dataTampil.forEach((item, index) => {
+        let badgeColor = item.status === 'Terjual' ? 'bg-rose-500' : (item.status === 'Booking' ? 'bg-amber-500' : 'bg-emerald-500');
+        const id = Number(item.id);
+        const latitude = Number(item.latitude);
+        const longitude = Number(item.longitude);
+        const namaTipe = escapeHtml(item.nama_tipe);
+        const status = escapeHtml(item.status);
+        const harga = formatRupiah(item.harga);
+        const ruteUrl = escapeHtml(buildDirectionsUrl(item));
+        const denahUrl = escapeHtml(item.denah_url || '');
+        
+        // Pakai denah dari database jika tersedia, fallback ke foto rumah.
+        let imgUrl = denahUrl || (index % 2 === 0 
+            ? 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80' 
+            : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80');
 
-                // Tampilan Popup Publik yang Menarik
-                const popupContent = `
-                    <div class="min-w-[200px] font-sans">
-                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=300&q=80" class="w-full h-24 object-cover rounded-t-lg mb-2" alt="${item.nama_tipe}">
-                        <div class="px-2 pb-2">
-                            <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mb-1 uppercase">${item.status}</span>
-                            <h3 class="font-bold text-slate-800 text-base leading-tight mb-1">${item.nama_tipe}</h3>
-                            <p class="text-emerald-600 font-bold text-sm mb-3">Rp ${parseInt(item.harga).toLocaleString('id-ID')}</p>
-                            ${item.status === 'Tersedia' 
-                                ? `<a href="#kontak" class="block text-center w-full bg-emerald-500 text-white text-xs py-2 rounded hover:bg-emerald-600 transition">Booking Sekarang</a>` 
-                                : `<button class="w-full bg-slate-200 text-slate-500 text-xs py-2 rounded cursor-not-allowed">Unit Tidak Tersedia</button>`
-                            }
-                        </div>
+        container.innerHTML += `
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden reveal active group hover:shadow-xl transition-all duration-300">
+                <div class="h-60 overflow-hidden relative bg-slate-100">
+                    <img src="${imgUrl}" alt="Denah ${namaTipe}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute top-4 left-4 ${badgeColor} text-white text-xs font-bold px-3 py-1 rounded-full shadow">${status}</div>
+                    ${denahUrl ? '<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur text-slate-700 text-xs font-bold px-3 py-1 rounded-full shadow">Denah Rumah</div>' : ''}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 truncate" title="${namaTipe}">${namaTipe}</h3>
+                    <p class="text-emerald-600 font-bold text-xl mb-4">Rp ${harga}</p>
+                    <button onclick="lihatLokasiPeta(${id}, ${latitude}, ${longitude})" class="w-full py-3 border-2 border-emerald-500 text-emerald-600 font-bold rounded-xl hover:bg-emerald-500 hover:text-white transition-colors mb-3">
+                        <i class="fas fa-map-marker-alt mr-2"></i> Lihat Lokasi di Peta
+                    </button>
+                    <div class="grid grid-cols-1 ${denahUrl ? 'sm:grid-cols-2' : ''} gap-3">
+                        ${denahUrl ? `<a href="${denahUrl}" target="_blank" rel="noopener" class="block w-full py-3 bg-white border-2 border-slate-200 text-slate-700 text-center font-bold rounded-xl hover:border-emerald-500 hover:text-emerald-600 transition-colors"><i class="fas fa-house mr-2"></i>Denah</a>` : ''}
+                        ${ruteUrl ? `<a href="${ruteUrl}" target="_blank" rel="noopener" class="block w-full py-3 bg-slate-900 text-white text-center font-bold rounded-xl hover:bg-slate-800 transition-colors"><i class="fas fa-route mr-2"></i>Rute</a>` : ''}
                     </div>
-                `;
+                </div>
+            </div>
+        `;
+    });
+}
 
-                L.marker([item.lat, item.lng], {icon: customIcon})
-                    .bindPopup(popupContent, {
-                        closeButton: false,
-                        className: 'custom-popup'
-                    })
-                    .addTo(map);
-            });
+// Fungsi Merender Titik Lokasi Peta
+function renderPeta(data) {
+    data.forEach(item => {
+        let color = item.status === 'Terjual' ? '#e11d48' : (item.status === 'Booking' ? '#f59e0b' : '#10b981');
+        const latitude = Number(item.latitude);
+        const longitude = Number(item.longitude);
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+        const namaTipe = escapeHtml(item.nama_tipe);
+        const status = escapeHtml(item.status);
+        const harga = formatRupiah(item.harga);
+        const ruteUrl = escapeHtml(buildDirectionsUrl(item));
+        const denahUrl = escapeHtml(item.denah_url || '');
+        
+        const customIcon = L.divIcon({
+            className: 'custom-icon',
+            html: `
+                <div class="relative group cursor-pointer">
+                    <div style="background-color:${color};" class="w-6 h-6 rounded-full border-4 border-white shadow-md animate-pulse"></div>
+                    <div style="background-color:${color};" class="absolute inset-0 rounded-full opacity-50 animate-ping"></div>
+                </div>
+            `,
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
         });
+
+        const popupContent = `
+            <div class="min-w-[200px] font-sans pt-2">
+                ${denahUrl ? `<img src="${denahUrl}" alt="Denah ${namaTipe}" class="w-full h-32 object-cover rounded-lg mb-3 border border-slate-100">` : ''}
+                <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mb-1 uppercase">${status}</span>
+                <h3 class="font-bold text-slate-800 text-base leading-tight mb-1">${namaTipe}</h3>
+                <p class="text-emerald-600 font-bold text-sm mb-3">Rp ${harga}</p>
+                <div class="grid grid-cols-1 ${denahUrl ? 'grid-cols-2' : ''} gap-2">
+                    ${denahUrl ? `<a href="${denahUrl}" target="_blank" rel="noopener" class="inline-flex items-center justify-center px-3 py-2 border border-slate-200 text-slate-700 text-xs font-bold rounded-lg hover:border-emerald-500 hover:text-emerald-600"><i class="fas fa-house mr-2"></i>Denah</a>` : ''}
+                    ${ruteUrl ? `<a href="${ruteUrl}" target="_blank" rel="noopener" class="inline-flex items-center justify-center px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800"><i class="fas fa-route mr-2"></i>Rute</a>` : ''}
+                </div>
+            </div>
+        `;
+
+        // Buat marker dan simpan referensinya ke dalam objek 'markerLayar' berdasarkan ID
+        const marker = L.marker([latitude, longitude], {icon: customIcon})
+            .bindPopup(popupContent)
+            .addTo(publicMap);
+            
+        markerLayar[item.id] = marker;
+    });
+}
+
+// Fungsi Interaktif: Dari Katalog ke Peta
+function lihatLokasiPeta(id, lat, lng) {
+    // 1. Gulir layar ke bagian WebGIS
+    document.getElementById('webgis').scrollIntoView({ behavior: 'smooth' });
+    
+    // 2. Beri sedikit jeda agar scroll selesai, lalu zoom ke lokasi dan buka popup
+    setTimeout(() => {
+        publicMap.flyTo([lat, lng], 19, { animate: true, duration: 1.5 });
+        
+        // Buka popup jika marker tersebut ada di memori
+        if(markerLayar[id]) {
+            setTimeout(() => { markerLayar[id].openPopup(); }, 1500); // Buka setelah animasi zoom selesai
+        }
+    }, 500);
+}
     </script>
 </body>
 </html>

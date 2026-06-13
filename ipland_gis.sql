@@ -32,6 +32,8 @@ CREATE TABLE `hunian` (
   `nama_tipe` varchar(100) NOT NULL,
   `harga` decimal(15,2) NOT NULL,
   `status` enum('Tersedia','Booking','Terjual') DEFAULT 'Tersedia',
+  `rute_url` varchar(255) DEFAULT NULL,
+  `denah_url` varchar(255) DEFAULT NULL,
   `latitude` decimal(10,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -41,9 +43,9 @@ CREATE TABLE `hunian` (
 -- Dumping data untuk tabel `hunian`
 --
 
-INSERT INTO `hunian` (`id`, `nama_tipe`, `harga`, `status`, `latitude`, `longitude`, `created_at`) VALUES
-(1, 'Tipe Zamzam 45/90', 650000000.00, 'Tersedia', -6.37610000, 106.92420000, '2026-05-22 08:06:39'),
-(2, 'Tipe Firdaus 60/120', 850000000.00, 'Terjual', -6.37550000, 106.92500000, '2026-05-22 08:06:39');
+INSERT INTO `hunian` (`id`, `nama_tipe`, `harga`, `status`, `rute_url`, `denah_url`, `latitude`, `longitude`, `created_at`) VALUES
+(1, 'Tipe Zamzam 45/90', 650000000.00, 'Tersedia', 'https://www.google.com/maps/dir/?api=1&destination=-6.37610000,106.92420000', '/denah/tipe-zamzam-45-90.jpg', -6.37610000, 106.92420000, '2026-05-22 08:06:39'),
+(2, 'Tipe Firdaus 60/120', 850000000.00, 'Terjual', 'https://www.google.com/maps/dir/?api=1&destination=-6.37550000,106.92500000', '/denah/tipe-firdaus-60-120.jpg', -6.37550000, 106.92500000, '2026-05-22 08:06:39');
 
 --
 -- Indexes for dumped tables

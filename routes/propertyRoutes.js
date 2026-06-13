@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express.Router();
-const kavlingController = require('../controllers/propertyController');
+const propertyController = require('../controllers/propertyController');
 
-// Route: GET /api/kavling
-router.get('/', kavlingController.getAllKavling);
+const router = express.Router();
+
+router.get('/', propertyController.getHunianAPI);
 
 module.exports = router;

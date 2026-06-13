@@ -2,9 +2,11 @@
   "name": "ipland-webgis",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --check server.js && node --check controllers/propertyController.js && node --check models/propertyModel.js && node --check config/db.js"
   },
   "keywords": [],
   "author": "",
