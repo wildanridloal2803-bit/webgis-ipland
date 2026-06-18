@@ -17,8 +17,6 @@
         .slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-        
-        /* Z-Index Fixes untuk Maps vs Modal vs Sidebar */
         .leaflet-container { z-index: 10 !important; }
         .leaflet-top, .leaflet-bottom { z-index: 10 !important; }
         .leaflet-control-layers {
@@ -27,8 +25,6 @@
             box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16) !important;
             overflow: hidden;
         }
-        
-        /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -49,30 +45,23 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans h-screen flex overflow-hidden selection:bg-emerald-200">
 
-    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[2000] hidden md:hidden opacity-0 transition-opacity duration-300" onclick="toggleSidebar()"></div>
-
-    <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 shadow-xl fixed inset-y-0 left-0 z-[2010] transform -translate-x-full md:relative md:translate-x-0 h-full">
-        <div class="p-6 border-b border-slate-800 bg-slate-950 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/30">IP</div>
-                <div>
-                    <h1 class="text-xl font-bold text-white tracking-wide">IP<span class="text-emerald-500">Land</span></h1>
-                    <p class="text-[10px] text-slate-400 uppercase tracking-widest">Admin Panel</p>
-                </div>
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 shadow-xl z-20">
+        <div class="p-6 border-b border-slate-800 bg-slate-950 flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/30">IP</div>
+            <div>
+                <h1 class="text-xl font-bold text-white tracking-wide">IP<span class="text-emerald-500">Land</span></h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">Admin Panel</p>
             </div>
-            <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white text-xl">
-                <i class="fas fa-times"></i>
-            </button>
         </div>
         
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 mt-2 px-3">Menu Utama</p>
             <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl bg-emerald-600 text-white transition-all shadow-md shadow-emerald-900/20"><i class="fas fa-chart-pie w-5"></i> Dashboard</button>
-            <button onclick="switchTab('kelola')" id="nav-kelola" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-slate-800 hover:text-white transition-all text-slate-300"><i class="fas fa-map-location-dot w-5"></i> Kelola WebGIS</button>
-            <button onclick="switchTab('laporan')" id="nav-laporan" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-slate-800 hover:text-white transition-all text-slate-300"><i class="fas fa-file-invoice w-5"></i> Laporan Penjualan</button>
+            <button onclick="switchTab('kelola')" id="nav-kelola" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-slate-800 hover:text-white transition-all"><i class="fas fa-map-location-dot w-5"></i> Kelola WebGIS</button>
+            <button onclick="switchTab('laporan')" id="nav-laporan" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-slate-800 hover:text-white transition-all"><i class="fas fa-file-invoice w-5"></i> Laporan Penjualan</button>
             
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 mt-6 px-3">Pratinjau Publik</p>
-            <button onclick="switchTab('publik')" id="nav-publik" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-slate-800 hover:text-white transition-all text-slate-300"><i class="fas fa-globe w-5"></i> Webgis PT IPLand</button>
+            <button onclick="switchTab('publik')" id="nav-publik" class="nav-btn w-full flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-slate-800 hover:text-white transition-all"><i class="fas fa-globe w-5"></i> Webgis PT IPLand</button>
         </nav>
 
         <div class="p-4 border-t border-slate-800">
@@ -80,75 +69,69 @@
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
-        <header class="bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200 p-4 px-4 md:px-8 flex justify-between items-center z-10 relative">
-            <div class="flex items-center gap-3 md:gap-0">
-                <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-emerald-600 text-2xl p-1 transition-colors">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div>
-                    <h2 id="header-title" class="text-lg md:text-2xl font-bold text-slate-800 leading-tight">Ringkasan Dashboard</h2>
-                    <p class="text-xs md:text-sm text-slate-500 hidden sm:block">Selamat datang kembali, Admin.</p>
-                </div>
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header class="bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200 p-4 px-8 flex justify-between items-center z-10 relative">
+            <div>
+                <h2 id="header-title" class="text-2xl font-bold text-slate-800">Ringkasan Dashboard</h2>
+                <p class="text-sm text-slate-500">Selamat datang kembali, Admin.</p>
             </div>
-            <div class="flex items-center gap-3 md:gap-4">
-                <button class="relative p-2 text-slate-400 hover:text-emerald-600 transition-colors"><i class="fas fa-bell text-lg md:text-xl"></i><span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full"></span></button>
-                <div class="flex items-center gap-3 border-l border-slate-200 pl-3 md:pl-4">
-                    <div class="hidden sm:block text-right">
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-slate-400 hover:text-emerald-600 transition-colors"><i class="fas fa-bell text-xl"></i><span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full"></span></button>
+                <div class="flex items-center gap-3 border-l border-slate-200 pl-4">
+                    <img src="https://ui-avatars.com/api/?name=Admin+IPLand&background=10b981&color=fff" alt="Admin" class="w-10 h-10 rounded-full shadow-sm">
+                    <div class="hidden md:block text-right">
                         <p class="text-sm font-bold text-slate-700">Administrator</p>
                         <p class="text-xs text-slate-500">admin@ipland.co.id</p>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name=Admin+IPLand&background=10b981&color=fff" alt="Admin" class="w-8 h-8 md:w-10 md:h-10 rounded-full shadow-sm">
                 </div>
             </div>
         </header>
 
-        <div class="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-50 relative">
-            
+        <div class="flex-1 p-8 overflow-y-auto bg-slate-50 relative">
             <div id="view-dashboard" class="tab-content block">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 slide-up flex items-center justify-between" style="animation-delay: 0.1s;">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 slide-up flex items-center justify-between" style="animation-delay: 0.1s;">
                         <div>
-                            <p class="text-xs md:text-sm text-slate-500 font-semibold mb-1">Total Unit Properti</p>
-                            <p class="text-3xl md:text-4xl font-bold text-slate-800" id="stat-total">0</p>
+                            <p class="text-sm text-slate-500 font-semibold mb-1">Total Unit Properti</p>
+                            <p class="text-4xl font-bold text-slate-800" id="stat-total">0</p>
                         </div>
-                        <div class="w-12 h-12 md:w-14 md:h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl md:text-2xl"><i class="fas fa-home"></i></div>
+                        <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-home"></i></div>
                     </div>
-                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 slide-up flex items-center justify-between" style="animation-delay: 0.2s;">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 slide-up flex items-center justify-between" style="animation-delay: 0.2s;">
                         <div>
-                            <p class="text-xs md:text-sm text-emerald-500 font-semibold mb-1">Unit Tersedia</p>
-                            <p class="text-3xl md:text-4xl font-bold text-emerald-600" id="stat-tersedia">0</p>
+                            <p class="text-sm text-emerald-500 font-semibold mb-1">Unit Tersedia</p>
+                            <p class="text-4xl font-bold text-emerald-600" id="stat-tersedia">0</p>
                         </div>
-                        <div class="w-12 h-12 md:w-14 md:h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl md:text-2xl"><i class="fas fa-check-circle"></i></div>
+                        <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-check-circle"></i></div>
                     </div>
-                    <div class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 slide-up flex items-center justify-between sm:col-span-2 lg:col-span-1" style="animation-delay: 0.3s;">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 slide-up flex items-center justify-between" style="animation-delay: 0.3s;">
                         <div>
-                            <p class="text-xs md:text-sm text-rose-500 font-semibold mb-1">Unit Terjual</p>
-                            <p class="text-3xl md:text-4xl font-bold text-rose-600" id="stat-terjual">0</p>
+                            <p class="text-sm text-rose-500 font-semibold mb-1">Unit Terjual</p>
+                            <p class="text-4xl font-bold text-rose-600" id="stat-terjual">0</p>
                         </div>
-                        <div class="w-12 h-12 md:w-14 md:h-14 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl md:text-2xl"><i class="fas fa-tags"></i></div>
+                        <div class="w-14 h-14 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-2xl"><i class="fas fa-tags"></i></div>
                     </div>
                 </div>
                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 slide-up" style="animation-delay: 0.4s;">
                     <div class="flex justify-between items-center mb-4 px-2">
-                        <h3 class="text-base md:text-lg font-bold text-slate-700"><i class="fas fa-map text-emerald-500 mr-2"></i> Peta Sebaran Properti</h3>
-                        <button onclick="hapusRuteAktif()" class="text-xs bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 px-3 py-1.5 rounded-lg transition-colors font-semibold hidden" id="btn-hapus-rute"><i class="fas fa-times mr-1"></i> Batal Rute</button>
+                        <h3 class="text-lg font-bold text-slate-700"><i class="fas fa-map text-emerald-500 mr-2"></i> Peta Sebaran Properti</h3>
+                        <button onclick="hapusRuteAktif()" class="text-xs bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 px-3 py-1.5 rounded-lg transition-colors font-semibold hidden" id="btn-hapus-rute"><i class="fas fa-times mr-1"></i> Hapus Rute</button>
                     </div>
-                    <div id="main-map" class="w-full h-[300px] sm:h-[400px] rounded-xl z-10 border border-slate-200"></div>
+                    <div id="main-map" class="w-full h-[400px] rounded-xl z-10 border border-slate-200"></div>
                 </div>
             </div>
 
             <div id="view-kelola" class="tab-content hidden slide-up">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                    <div class="p-4 md:p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
-                        <div class="relative w-full sm:w-72">
+                    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50/50">
+                        <div class="relative w-full md:w-72">
                             <i class="fas fa-search absolute left-4 top-3 text-slate-400"></i>
                             <input type="text" placeholder="Cari tipe hunian..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-sm">
                         </div>
-                        <button onclick="openModal()" class="w-full sm:w-auto bg-emerald-600 text-white px-5 py-2.5 rounded-xl shadow-md shadow-emerald-200 hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 text-sm font-semibold whitespace-nowrap"><i class="fas fa-plus"></i> Tambah Data Spasial</button>
+                        <button onclick="openModal()" class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl shadow-md shadow-emerald-200 hover:bg-emerald-700 hover:shadow-lg transition-all flex items-center gap-2 text-sm font-semibold whitespace-nowrap"><i class="fas fa-plus"></i> Tambah Data Spasial</button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse min-w-[800px]">
+                        <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                                     <th class="p-4 font-semibold">Tipe Hunian</th>
@@ -166,29 +149,29 @@
             </div>
 
             <div id="view-laporan" class="tab-content hidden slide-up">
-                <div class="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-100 text-center flex flex-col items-center justify-center min-h-[300px] md:min-h-[400px]">
-                    <div class="w-20 h-20 md:w-24 md:h-24 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center text-3xl md:text-4xl mb-6 shadow-inner"><i class="fas fa-chart-line"></i></div>
-                    <h3 class="text-xl md:text-2xl font-bold text-slate-800 mb-2">Modul Laporan</h3>
-                    <p class="text-sm md:text-base text-slate-500 max-w-md mb-8">Fitur untuk mengekspor data penjualan ke dalam format PDF/Excel dan melihat grafik tren penjualan properti bulanan.</p>
-                    <button class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-xl shadow-md hover:bg-indigo-700 transition-all font-semibold flex items-center justify-center gap-2 text-sm md:text-base"><i class="fas fa-download"></i> Ekspor Laporan (.xlsx)</button>
+                <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-100 text-center flex flex-col items-center justify-center min-h-[400px]">
+                    <div class="w-24 h-24 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Modul Laporan</h3>
+                    <p class="text-slate-500 max-w-md mb-8">Fitur untuk mengekspor data penjualan ke dalam format PDF/Excel dan melihat grafik tren penjualan properti bulanan.</p>
+                    <button class="px-6 py-3 bg-indigo-600 text-white rounded-xl shadow-md hover:bg-indigo-700 transition-all font-semibold flex items-center gap-2"><i class="fas fa-download"></i> Ekspor Laporan Penjualan (.xlsx)</button>
                 </div>
             </div>
 
             <div id="view-publik" class="tab-content hidden slide-up">
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
                     <div class="text-center mb-6">
                         <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
                             Webgis PT IPLand
                         </h1>
-                        <p class="text-xs md:text-sm text-gray-500 mt-2">Temukan properti hunian terbaik dan rute jalan terakurat</p>
+                        <p class="text-sm text-gray-500 mt-2">Temukan properti hunian terbaik dan rute jalan terakurat</p>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-2 space-y-4">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 md:p-4">
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
                                 <div class="flex flex-col sm:flex-row gap-3">
                                     <div class="flex-1 relative">
-                                        <input type="text" id="keywordNamaPublik" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm text-gray-800" placeholder="Cari tipe hunian / lokasi..." onkeyup="filterPetaPublik()" autocomplete="off">
+                                        <input type="text" id="keywordNamaPublik" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm text-gray-800" placeholder="Cari berdasarkan tipe hunian atau lokasi..." onkeyup="filterPetaPublik()" autocomplete="off">
                                         <div id="wadahHasilPencarianPublik" class="absolute z-[2000] w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg hidden max-h-60 overflow-y-auto"></div>
                                     </div>
                                     <div class="sm:w-48">
@@ -203,35 +186,33 @@
                             </div>
 
                             <div class="relative bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                                <div class="absolute top-4 left-4 z-[1000] flex flex-col sm:flex-row gap-2">
-                                    <button class="bg-white hover:bg-gray-50 text-gray-700 text-xs sm:text-sm font-medium py-2 px-3 rounded-lg border border-gray-200 shadow-sm transition-all duration-200 flex items-center gap-2" onclick="temukanLokasiSayaPublik()">
+                                <div class="absolute top-4 left-4 z-[1000] flex gap-2">
+                                    <button class="bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg border border-gray-200 shadow-sm transition-all duration-200 flex items-center gap-2" onclick="temukanLokasiSayaPublik()">
                                         <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                         Lokasi Saya
                                     </button>
-                                    <button id="btnBatalPublik" class="bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-medium py-2 px-3 rounded-lg shadow-sm hidden transition-all duration-200 text-left sm:text-center" onclick="batalkanRutePublik()">Batalkan Rute</button>
+                                    <button id="btnBatalPublik" class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-3 rounded-lg shadow-sm hidden transition-all duration-200" onclick="batalkanRutePublik()">Batalkan Rute</button>
                                 </div>
-                                <div id="publik-map" class="w-full h-[350px] md:h-[500px]"></div>
+                                <div id="publik-map" class="w-full h-[400px] md:h-[500px]"></div>
                             </div>
 
                             <div id="kotakInfoRutePublik" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hidden transition-all duration-300">
                                 <div class="flex flex-col md:flex-row h-auto md:max-h-[320px]">
-                                    <div class="md:w-1/3 bg-blue-50 p-4 md:p-6 flex flex-row md:flex-col justify-around md:justify-center items-center text-center border-b md:border-b-0 md:border-r border-blue-100 shrink-0 relative overflow-hidden">
-                                        <div class="z-10">
-                                            <p class="text-[10px] md:text-xs font-extrabold text-blue-400 uppercase tracking-widest mb-1">Jarak</p>
-                                            <p id="txtJarakPublik" class="text-xl sm:text-2xl lg:text-3xl font-black text-blue-700">-</p>
+                                    <div class="md:w-1/3 bg-blue-50 p-6 flex flex-col justify-center items-center text-center border-b md:border-b-0 md:border-r border-blue-100 shrink-0 relative overflow-hidden">
+                                        <div class="mb-6 z-10">
+                                            <p class="text-xs font-extrabold text-blue-400 uppercase tracking-widest mb-1">Jarak Tempuh</p>
+                                            <p id="txtJarakPublik" class="text-3xl lg:text-4xl font-black text-blue-700">-</p>
                                         </div>
-                                        <div class="hidden md:block w-8 h-[1px] bg-blue-200 my-4"></div>
-                                        <div class="block md:hidden h-8 w-[1px] bg-blue-200 mx-2"></div>
                                         <div class="z-10">
-                                            <p class="text-[10px] md:text-xs font-extrabold text-blue-400 uppercase tracking-widest mb-1">Waktu</p>
-                                            <p id="txtWaktuPublik" class="text-xl sm:text-2xl lg:text-3xl font-black text-blue-700">-</p>
+                                            <p class="text-xs font-extrabold text-blue-400 uppercase tracking-widest mb-1">Estimasi Waktu</p>
+                                            <p id="txtWaktuPublik" class="text-3xl lg:text-4xl font-black text-blue-700">-</p>
                                         </div>
                                     </div>
-                                    <div class="md:w-2/3 flex flex-col bg-white overflow-hidden max-h-[250px] md:max-h-full">
+                                    <div class="md:w-2/3 flex flex-col bg-white overflow-hidden">
                                         <div class="p-3 bg-white border-b border-gray-100 shadow-sm z-10 shrink-0">
-                                            <h3 class="text-xs md:text-sm font-bold text-gray-700 flex items-center gap-2">
+                                            <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-5.446a9 9 0 0112.894-12.894l4.646 4.646m-13.682 9.09l4.646 4.646a9 9 0 0012.894-12.894L19.447 3"></path></svg>
-                                                Panduan Arah (Auto Suara 🔊)
+                                                Panduan Arah Jalan (Auto Navigasi 🔊)
                                             </h3>
                                         </div>
                                         <div class="overflow-y-auto p-2"><ul id="listInstruksiPublik" class="divide-y divide-gray-100"></ul></div>
@@ -240,14 +221,17 @@
                             </div>
                         </div>
 
-                        <div class="space-y-4 md:space-y-6">
+                        <div class="space-y-6">
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                                 <div class="flex border-b border-gray-200 bg-gray-50/50">
-                                    <button id="btnTabPopulerPublik" onclick="bukaTabPublik('populer')" class="flex-1 py-3 text-xs sm:text-sm font-bold text-blue-600 border-b-2 border-blue-600 bg-white transition-all">Paling Diminati</button>
-                                    <button id="btnTabUlasanPublik" onclick="bukaTabPublik('ulasan')" class="flex-1 py-3 text-xs sm:text-sm font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-500 transition-all">Ulasan Terbaru</button>
+                                    <button id="btnTabPopulerPublik" onclick="bukaTabPublik('populer')" class="flex-1 py-3 text-sm font-bold text-blue-600 border-b-2 border-blue-600 bg-white transition-all">Paling Diminati</button>
+                                    <button id="btnTabUlasanPublik" onclick="bukaTabPublik('ulasan')" class="flex-1 py-3 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-500 transition-all">Ulasan Terbaru</button>
                                 </div>
-                                <div id="kontenPopulerPublik" class="block divide-y divide-gray-100 max-h-[250px] md:max-h-[300px] overflow-y-auto"></div>
-                                <div id="kontenUlasanPublik" class="hidden divide-y divide-gray-100 max-h-[250px] md:max-h-[300px] overflow-y-auto">
+
+                                <div id="kontenPopulerPublik" class="block divide-y divide-gray-100 max-h-[300px] overflow-y-auto">
+                                   </div>
+
+                                <div id="kontenUlasanPublik" class="hidden divide-y divide-gray-100 max-h-[300px] overflow-y-auto">
                                     <div id="wadahSaranRealtimePublik">
                                         <div class="p-8 text-center text-gray-400 text-sm">Fitur ulasan sedang dimuat...</div>
                                     </div>
@@ -255,21 +239,21 @@
                             </div>
 
                             <div id="boxSaranPublik" class="bg-white rounded-xl shadow-sm border border-gray-200">
-                                <div class="px-4 py-3 md:px-5 md:py-4 border-b border-gray-100 bg-gray-50/50">
-                                    <h3 id="judulSaranPublik" class="text-xs md:text-sm font-bold text-gray-400">📌 Pilih Lokasi Dahulu</h3>
+                                <div class="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                                    <h3 id="judulSaranPublik" class="text-sm font-bold text-gray-400">📌 Pilih Lokasi Dahulu</h3>
                                 </div>
-                                <div class="p-4 md:p-5">
+                                <div class="p-5">
                                     <form id="formSaranUserPublik" class="space-y-4" onsubmit="kirimSaranPublikAJAX(event)">
                                         <input type="hidden" id="id_hunian_saran_publik" name="id_hunian">
                                         <div>
-                                            <label class="block text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nama Kamu</label>
-                                            <input type="text" id="nama_user_publik" name="nama_user" disabled required class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition cursor-not-allowed" placeholder="Nama lengkap...">
+                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Kamu</label>
+                                            <input type="text" id="nama_user_publik" name="nama_user" disabled required class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition cursor-not-allowed" placeholder="Masukkan nama kamu...">
                                         </div>
                                         <div>
-                                            <label class="block text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Ulasan Kamu</label>
-                                            <textarea id="isi_saran_publik" name="isi_saran" rows="3" disabled required class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition resize-none cursor-not-allowed" placeholder="Tanyakan seputar hunian..."></textarea>
+                                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Ulasan Kamu</label>
+                                            <textarea id="isi_saran_publik" name="isi_saran" rows="3" disabled required class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-none cursor-not-allowed" placeholder="Tanyakan seputar hunian atau beri ulasan..."></textarea>
                                         </div>
-                                        <button type="submit" id="btnKirimSaranPublik" disabled class="w-full bg-gray-400 text-white font-bold py-2 md:py-2.5 rounded-lg transition-all duration-200 text-xs md:text-sm cursor-not-allowed">
+                                        <button type="submit" id="btnKirimSaranPublik" disabled class="w-full bg-gray-400 text-white font-bold py-2.5 rounded-lg transition-all duration-200 text-sm cursor-not-allowed">
                                               Kirim Ulasan
                                         </button>
                                     </form>
@@ -282,68 +266,68 @@
         </div>
     </main>
 
-    <div id="crud-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[3000] fade-in opacity-0 transition-opacity duration-300 p-4">
-        <div class="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col lg:flex-row overflow-hidden transform scale-95 transition-transform duration-300 max-h-[95vh]" id="modal-content">
-            
-            <div class="w-full lg:w-1/2 p-5 md:p-8 flex flex-col overflow-y-auto" style="max-height: 60vh; lg:max-height: 85vh;">
-                <div class="flex justify-between items-center mb-4 md:mb-6 shrink-0">
-                    <h3 id="modal-title" class="text-xl md:text-2xl font-bold text-slate-800">Tambah Data Hunian</h3>
-                    <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 transition-colors text-xl md:text-2xl"><i class="fas fa-times"></i></button>
+    <div id="crud-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[100] fade-in opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex overflow-hidden transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="w-1/2 p-8 flex flex-col max-h-[85vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modal-title" class="text-2xl font-bold text-slate-800">Tambah Data Hunian</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 transition-colors text-xl"><i class="fas fa-times"></i></button>
                 </div>
 
                 <form id="crud-form" class="flex-1 flex flex-col">
                     <input type="hidden" id="form-id">
-                    <div class="space-y-3 md:space-y-4 flex-1">
+                    <div class="space-y-4 flex-1">
                         <div>
-                            <label class="block text-xs md:text-sm font-semibold text-slate-700 mb-1">Nama / Tipe Hunian</label>
-                            <input type="text" id="form-nama" class="w-full border border-slate-300 rounded-xl p-2.5 md:p-3 text-sm md:text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Nama / Tipe Hunian</label>
+                            <input type="text" id="form-nama" class="w-full border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" required>
                         </div>
                         <div>
-                            <label class="block text-xs md:text-sm font-semibold text-slate-700 mb-1">Harga (Rp)</label>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Harga (Rp)</label>
                             <div class="relative">
-                                <span class="absolute left-3 top-2.5 md:top-3 text-slate-500 text-sm md:text-base">Rp</span>
-                                <input type="number" id="form-harga" class="w-full border border-slate-300 rounded-xl p-2.5 md:p-3 pl-9 md:pl-10 text-sm md:text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required>
+                                <span class="absolute left-4 top-3 text-slate-500">Rp</span>
+                                <input type="number" id="form-harga" class="w-full border border-slate-300 rounded-xl p-3 pl-12 focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs md:text-sm font-semibold text-slate-700 mb-1">Status Penjualan</label>
-                            <select id="form-status" class="w-full border border-slate-300 rounded-xl p-2.5 md:p-3 text-sm md:text-base focus:ring-2 focus:ring-emerald-500 outline-none bg-white transition-all">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Status Penjualan</label>
+                            <select id="form-status" class="w-full border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none bg-white transition-all">
                                 <option value="Tersedia">Tersedia (Siap Jual)</option>
                                 <option value="Booking">Sedang di-Booking</option>
                                 <option value="Terjual">Sudah Terjual</option>
                             </select>
                         </div>
                         
-                        <div class="mt-2 md:mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-                            <label class="block text-[10px] md:text-xs font-bold text-emerald-800 uppercase tracking-wide mb-1">
-                                🔗 Deteksi via Google Maps
+                        <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+                            <label class="block text-xs font-bold text-emerald-800 uppercase tracking-wide mb-1">
+                                🔗 Deteksi Otomatis via Google Maps
                             </label>
-                            <input type="text" id="form-gmaps" class="w-full border border-emerald-200 rounded-lg p-2 text-xs md:text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder="Paste koordinat/link G-Maps...">
+                            <input type="text" id="form-gmaps" class="w-full border border-emerald-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all" placeholder="Paste koordinat atau link G-Maps...">
+                            <p class="text-[10px] text-emerald-600 mt-1">Sistem otomatis mengekstrak Latitude & Longitude.</p>
                         </div>
                         
-                        <div class="p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-100 mt-2">
-                            <div class="flex gap-2 md:gap-3">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 mt-2">
+                            <div class="flex gap-3">
                                 <div class="w-1/2">
-                                    <label class="block text-[10px] md:text-xs text-slate-600 mb-1">Latitude</label>
-                                    <input type="text" id="form-lat" class="w-full border border-slate-200 rounded-lg p-2 text-xs md:text-sm bg-slate-100 text-slate-500 outline-none cursor-not-allowed" readonly required>
+                                    <label class="block text-xs text-slate-600 mb-1">Latitude</label>
+                                    <input type="text" id="form-lat" class="w-full border border-slate-200 rounded-lg p-2 text-sm bg-slate-100 text-slate-500 outline-none cursor-not-allowed" readonly required>
                                 </div>
                                 <div class="w-1/2">
-                                    <label class="block text-[10px] md:text-xs text-slate-600 mb-1">Longitude</label>
-                                    <input type="text" id="form-lng" class="w-full border border-slate-200 rounded-lg p-2 text-xs md:text-sm bg-slate-100 text-slate-500 outline-none cursor-not-allowed" readonly required>
+                                    <label class="block text-xs text-slate-600 mb-1">Longitude</label>
+                                    <input type="text" id="form-lng" class="w-full border border-slate-200 rounded-lg p-2 text-sm bg-slate-100 text-slate-500 outline-none cursor-not-allowed" readonly required>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row justify-end gap-2 md:gap-3 mt-6 pt-4 border-t border-slate-100 shrink-0">
-                        <button type="button" onclick="closeModal()" class="order-2 sm:order-1 px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-all text-sm md:text-base">Batal</button>
-                        <button type="submit" class="order-1 sm:order-2 px-5 py-2.5 rounded-xl font-semibold bg-emerald-600 text-white shadow-md hover:bg-emerald-700 transition-all text-sm md:text-base">Simpan Data</button>
+                    <div class="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100">
+                        <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl font-semibold text-slate-600 hover:bg-slate-100 transition-all">Batal</button>
+                        <button type="submit" class="px-5 py-2.5 rounded-xl font-semibold bg-emerald-600 text-white shadow-md hover:bg-emerald-700 transition-all">Simpan Data</button>
                     </div>
                 </form>
             </div>
 
-            <div class="w-full lg:w-1/2 bg-slate-200 relative border-t lg:border-t-0 lg:border-l border-slate-200 min-h-[250px] lg:h-auto">
-                <div class="absolute top-2 md:top-4 left-1/2 -translate-x-1/2 z-[400] bg-white/90 backdrop-blur px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-lg text-[10px] md:text-xs font-bold text-slate-700 pointer-events-none flex items-center gap-1.5 md:gap-2 border border-slate-200 whitespace-nowrap">
+            <div class="w-1/2 bg-slate-200 relative border-l border-slate-200">
+                <div class="absolute top-4 left-1/2 -translate-x-1/2 z-[400] bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg text-xs font-bold text-slate-700 pointer-events-none flex items-center gap-2 border border-slate-200">
                     <i class="fas fa-mouse-pointer text-emerald-500"></i> Klik peta untuk set lokasi
                 </div>
                 <div id="modal-map" class="w-full h-full"></div>
@@ -356,7 +340,7 @@
     
     <script>
     // ==========================================
-    // VARIABEL GLOBAL
+    // VARIABEL GLOBAL (UPDATED)
     // ==========================================
     let dbHunian = []; 
     let mainMap, modalMap, modalMarker, publikMap;
@@ -364,8 +348,8 @@
     const defaultCenter = [-6.3761, 106.9242]; 
     let adminBaseLayers;
     let watchId = null;
-    let watchIdPublik = null; 
-    let lastSpokenInstruction = ""; 
+    let watchIdPublik = null; // Tambahan: ID untuk GPS tracker di halaman publik
+    let lastSpokenInstruction = ""; // Tambahan: Biar suara gak spam
     let markerPublikArray = [];
     let userLokasiPublik = null;
     let idHunianTerpilihPublik = '';
@@ -391,27 +375,7 @@
     }
 
     // ==========================================
-    // FUNGSI SIDEBAR MOBILE (TOGGLE)
-    // ==========================================
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        
-        if (sidebar.classList.contains('-translate-x-full')) {
-            // Buka Sidebar
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-        } else {
-            // Tutup Sidebar
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('opacity-0');
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-        }
-    }
-
-    // ==========================================
-    // LOAD DATA API
+    // FUNGSI LOAD DATA UTAMA (MEMPENGARUHI SELURUH TAB)
     // ==========================================
     async function loadDataDariDatabase() {
         try {
@@ -426,7 +390,7 @@
                 refreshPublikMapMarkers(); 
             }
         } catch (error) {
-            console.error("Gagal memuat API: ", error);
+            console.error("Gagal memuat data dari database: ", error);
         }
     }
 
@@ -434,9 +398,9 @@
     // INISIALISASI PETA
     // ==========================================
     function createBaseLayers() {
-        const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '© OSM' });
-        const googleRoadmap = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'] });
-        const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'] });
+        const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' });
+        const googleRoadmap = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'], attribution: '© Google Maps' });
+        const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'], attribution: '© Google Maps' });
         return { carto, googleRoadmap, googleSatellite };
     }
 
@@ -453,12 +417,12 @@
     function initPublikMap() {
         publikMap = L.map('publik-map').setView(defaultCenter, 14);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© OSM', subdomains: 'abcd', maxZoom: 19
+            attribution: '© OpenStreetMap', subdomains: 'abcd', maxZoom: 19
         }).addTo(publikMap);
     }
 
     // ==========================================
-    // PENGATURAN TAB & NAVIGASI
+    // PENGATURAN TAB (NAVIGASI)
     // ==========================================
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -477,16 +441,17 @@
         };
         document.getElementById('header-title').innerText = titleMap[tabId];
 
-        // Tutup sidebar mobile otomatis setelah klik menu
-        if (window.innerWidth < 768) { toggleSidebar(); }
-
         if(tabId === 'kelola') renderTable();
-        if(tabId === 'dashboard' && mainMap) { setTimeout(() => { mainMap.invalidateSize(); }, 300); }
-        if(tabId === 'publik' && publikMap) { setTimeout(() => { publikMap.invalidateSize(); }, 300); }
+        if(tabId === 'dashboard' && mainMap) {
+            setTimeout(() => { mainMap.invalidateSize(); }, 200);
+        }
+        if(tabId === 'publik' && publikMap) {
+            setTimeout(() => { publikMap.invalidateSize(); }, 200);
+        }
     }
 
     // ==========================================
-    // RENDER DATA ADMIN
+    // RENDER DATA ADMIN (DASHBOARD & KELOLA)
     // ==========================================
     function updateDashboardStats() {
         document.getElementById('stat-total').innerText = dbHunian.length;
@@ -508,17 +473,17 @@
             const longitude = Number(item.longitude);
             
             tbody.innerHTML += `
-                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
-                    <td class="p-3 md:p-4 font-semibold text-slate-700 whitespace-nowrap">${namaTipe}</td>
-                    <td class="p-3 md:p-4 text-slate-600 whitespace-nowrap">Rp ${harga}</td>
-                    <td class="p-3 md:p-4 text-[10px] md:text-xs font-mono text-slate-500 bg-slate-50 rounded">${latitude.toFixed(5)}, ${longitude.toFixed(5)}</td>
-                    <td class="p-3 md:p-4">
-                        <button onclick="tampilkanRute(${latitude}, ${longitude})" class="text-blue-600 hover:text-blue-700 font-semibold text-xs flex items-center gap-1 bg-transparent border-none cursor-pointer whitespace-nowrap">
+                <tr class="hover:bg-slate-50 transition-colors group border-b border-slate-50">
+                    <td class="p-4 font-semibold text-slate-700">${namaTipe}</td>
+                    <td class="p-4 text-slate-600">Rp ${harga}</td>
+                    <td class="p-4 text-xs font-mono text-slate-500 bg-slate-50 rounded">${latitude.toFixed(5)}, ${longitude.toFixed(5)}</td>
+                    <td class="p-4">
+                        <button onclick="tampilkanRute(${latitude}, ${longitude})" class="text-blue-600 hover:text-blue-700 font-semibold text-xs flex items-center gap-1 bg-transparent border-none cursor-pointer">
                             <i class="fas fa-route mr-1"></i>Navigasi Peta
                         </button>
                     </td>
-                    <td class="p-3 md:p-4 whitespace-nowrap"><span class="px-2 md:px-3 py-1 text-[10px] md:text-xs font-bold rounded-full border ${badgeClass}">${status}</span></td>
-                    <td class="p-3 md:p-4 text-right whitespace-nowrap">
+                    <td class="p-4"><span class="px-3 py-1 text-xs font-bold rounded-full border ${badgeClass}">${status}</span></td>
+                    <td class="p-4 text-right">
                         <button onclick="openModal(true, '${dataString}')" class="text-indigo-500 hover:bg-indigo-50 w-8 h-8 rounded-lg transition-colors mr-1"><i class="fas fa-edit"></i></button>
                         <button onclick="deleteData(${item.id})" class="text-rose-500 hover:bg-rose-50 w-8 h-8 rounded-lg transition-colors"><i class="fas fa-trash"></i></button>
                     </td>
@@ -538,27 +503,28 @@
             
             const customIcon = L.divIcon({
                 className: 'custom-icon',
-                html: `<div style="background-color:${color}; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
-                iconSize: [14, 14], iconAnchor: [7, 7]
+                html: `<div style="background-color:${color}; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>`,
+                iconSize: [16, 16], iconAnchor: [8, 8]
             });
             
             L.marker([latitude, longitude], {icon: customIcon})
              .bindPopup(`
-                <div class="min-w-[150px] md:min-w-[180px]">
-                    <b class="text-sm md:text-base">${namaTipe}</b><br>
-                    <span class="text-emerald-600 font-semibold text-xs md:text-sm">Rp ${harga}</span>
+                <div class="min-w-[180px]">
+                    <b>${namaTipe}</b><br>
+                    <span class="text-emerald-600 font-semibold">Rp ${harga}</span>
                     <div class="mt-2 flex gap-2">
-                        <button onclick="tampilkanRute(${latitude}, ${longitude})" class="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded px-2 py-1.5 transition-colors w-full text-center border-none cursor-pointer">
+                        <button onclick="tampilkanRute(${latitude}, ${longitude})" class="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded px-2 py-1 transition-colors w-full text-center border-none cursor-pointer">
                             <i class="fas fa-location-arrow mr-1"></i> Rute ke Sini
                         </button>
                     </div>
                 </div>
-             `).addTo(mainMap);
+             `)
+             .addTo(mainMap);
         });
     }
 
     // ==========================================
-    // RENDER PETA PUBLIK
+    // RENDER DATA UNTUK PETA PUBLIK 
     // ==========================================
     function refreshPublikMapMarkers() {
         markerPublikArray.forEach(m => publikMap.removeLayer(m.objekMarker));
@@ -566,7 +532,7 @@
 
         const ikonDefault = L.icon({ 
             iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', 
-            iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -28] 
+            iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] 
         });
 
         dbHunian.forEach(item => {
@@ -578,10 +544,10 @@
             const namaTipe = escapeHtml(item.nama_tipe);
             const kategori = escapeHtml(item.kategori || 'Komersil'); 
             
-            const popupContent = `<div style='width:160px; md:width:190px;'>
-                               <h4 style='font-size:12px; font-weight:bold; color:#1f2937; margin-bottom:2px;'>${namaTipe}</h4>
+            const popupContent = `<div style='width:190px;'>
+                               <h4 style='font-size:14px; font-weight:bold; color:#1f2937; margin-bottom:2px;'>${namaTipe}</h4>
                                <p style='font-size:10px; color:#3b82f6; font-weight:bold;'>${kategori}</p>
-                               <button style='width:100%; padding:6px 0; background-color:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:11px; font-weight:bold; margin-top:8px;' onclick='buatRuteJalanPublik(${latitude}, ${longitude})'> Rute ke Sini</button>
+                               <button style='width:100%; padding:6px 0; background-color:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:bold; margin-top:8px;' onclick='buatRuteJalanPublik(${latitude}, ${longitude})'> Rute ke Sini</button>
                                </div>`;
                                
             const marker = L.marker([latitude, longitude], { icon: ikonDefault }).bindPopup(popupContent);
@@ -595,6 +561,7 @@
             marker.addTo(publikMap);
             markerPublikArray.push({ objekMarker: marker, id: idHunian, nama: namaTipe.toLowerCase(), kategori: kategori });
         });
+
         renderPopulerPublik();
     }
 
@@ -606,26 +573,26 @@
             let htmlResult = '';
             sortedData.forEach(pop => {
                 htmlResult += `
-                    <div class="p-3 md:p-4 hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-3" onclick="fokusKeMarkerPublik(${pop.id}, ${pop.latitude}, ${pop.longitude})">
-                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-gray-400 text-sm md:text-base"><i class="fas fa-home"></i></div>
+                    <div class="p-4 hover:bg-blue-50/50 transition cursor-pointer flex items-center gap-3" onclick="fokusKeMarkerPublik(${pop.id}, ${pop.latitude}, ${pop.longitude})">
+                        <div class="w-12 h-12 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-gray-400"><i class="fas fa-home"></i></div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="text-xs md:text-sm font-bold text-gray-800 truncate">${escapeHtml(pop.nama_tipe)}</h4>
-                            <p class="text-[10px] md:text-xs text-blue-600 font-medium mt-0.5">${escapeHtml(pop.kategori || 'Komersil')}</p>
+                            <h4 class="text-sm font-bold text-gray-800 truncate">${escapeHtml(pop.nama_tipe)}</h4>
+                            <p class="text-xs text-blue-600 font-medium mt-0.5">${escapeHtml(pop.kategori || 'Komersil')}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs md:text-sm font-bold text-gray-700">${pop.views || 0}</p>
-                            <p class="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-wider">dilihat</p>
+                            <p class="text-sm font-bold text-gray-700">${pop.views || 0}</p>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider">dilihat</p>
                         </div>
                     </div>`;
             });
             kontenPopuler.innerHTML = htmlResult;
         } else {
-            kontenPopuler.innerHTML = '<div class="p-8 text-center text-gray-400 text-sm">Belum ada data</div>';
+            kontenPopuler.innerHTML = '<div class="p-8 text-center text-gray-400 text-sm">Belum ada data tersedia</div>';
         }
     }
 
     // ==========================================
-    // LOGIKA FILTER PUBLIK
+    // LOGIKA PENCARIAN & FILTER TAB PUBLIK
     // ==========================================
     function filterPetaPublik() {
         var inputCari = document.getElementById('keywordNamaPublik');
@@ -643,7 +610,7 @@
                 if (kataKunci.length > 0) {
                     var koordLat = item.objekMarker.getLatLng().lat;
                     var koordLng = item.objekMarker.getLatLng().lng;
-                    htmlHasil += `<div class="p-3 border-b border-gray-100 hover:bg-blue-50 cursor-pointer" onclick="pilihHasilPencarianPublik(${item.id}, ${koordLat}, ${koordLng}, '${item.nama}')"><p class="text-xs md:text-sm font-bold text-gray-800 capitalize">${item.nama}</p></div>`;
+                    htmlHasil += `<div class="p-3 border-b border-gray-100 hover:bg-blue-50 cursor-pointer" onclick="pilihHasilPencarianPublik(${item.id}, ${koordLat}, ${koordLng}, '${item.nama}')"><p class="text-sm font-bold text-gray-800 capitalize">${item.nama}</p></div>`;
                     jumlahCocok++;
                 }
             } else { publikMap.removeLayer(item.objekMarker); }
@@ -670,7 +637,7 @@
     }
 
     // ==========================================
-    // LOGIKA ROUTING PETA PUBLIK (GPS & SUARA)
+    // LOGIKA ROUTING PETA PUBLIK (UPDATED - GPS TERKINI & SUARA)
     // ==========================================
     function temukanLokasiSayaPublik() {
         if (!navigator.geolocation) return;
@@ -683,19 +650,24 @@
     }
 
     function buatRuteJalanPublik(tujuanLat, tujuanLng) {
+        // Cek dukungan Geolocation
         if (!navigator.geolocation) {
-            Swal.fire({ icon: 'error', title: 'Oops!', text: 'Browser tidak mendukung deteksi lokasi.' });
+            Swal.fire({ icon: 'error', title: 'Oops!', text: 'Browser kamu tidak mendukung deteksi lokasi.' });
             return;
         }
 
         Swal.fire({
-            title: 'Mendeteksi Lokasi Terkini...', text: 'Mohon izinkan akses GPS', allowOutsideClick: false,
+            title: 'Mendeteksi Lokasi Terkini...',
+            text: 'Mohon izinkan akses GPS',
+            allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
 
+        // Reset routing sebelumnya jika ada
         if (routingControlPublik) { publikMap.removeControl(routingControlPublik); }
         if (watchIdPublik !== null) { navigator.geolocation.clearWatch(watchIdPublik); }
 
+        // Gunakan watchPosition agar rute terupdate mengikuti gerakan user (real-time)
         watchIdPublik = navigator.geolocation.watchPosition(
             function(position) {
                 Swal.close();
@@ -704,13 +676,17 @@
                 const currentLoc = L.latLng(currentLat, currentLng);
 
                 if (!routingControlPublik) {
+                    // Buat control routing pertama kali
                     routingControlPublik = L.Routing.control({
                         waypoints: [currentLoc, L.latLng(tujuanLat, tujuanLng)],
-                        createMarker: function() { return null; }, routeWhileDragging: false, addWaypoints: false,
+                        createMarker: function() { return null; }, 
+                        routeWhileDragging: false,
+                        addWaypoints: false,
                         lineOptions: { styles: [{ color: '#3b82f6', opacity: 0.8, weight: 5 }] },
                         router: L.Routing.osrmv1({ language: 'id', profile: 'driving' })
                     }).addTo(publikMap);
 
+                    // Event handler saat rute selesai dikalkulasi
                     routingControlPublik.on('routesfound', function(e) {
                         var routes = e.routes[0];
                         var summary = routes.summary;
@@ -718,22 +694,27 @@
                         document.getElementById('txtWaktuPublik').innerText = Math.round(summary.totalTime / 60) + " Menit";
                         document.getElementById('kotakInfoRutePublik').classList.remove('hidden');
 
+                        // Merender teks list instruksi di UI
                         var instructions = routes.instructions;
                         var listHtml = '';
                         instructions.forEach(function(inst) {
-                            listHtml += `<li class="p-2 md:p-3 text-[10px] md:text-sm text-gray-700 flex justify-between border-b border-gray-50 gap-2">
+                            listHtml += `<li class="p-3 text-sm text-gray-700 flex justify-between border-b border-gray-50">
                                             <span>${inst.text}</span>
-                                            <span class="font-bold text-blue-500 whitespace-nowrap">${inst.distance ? Math.round(inst.distance) + ' m' : ''}</span>
+                                            <span class="font-bold text-blue-500">${inst.distance ? Math.round(inst.distance) + ' m' : ''}</span>
                                          </li>`;
                         });
                         document.getElementById('listInstruksiPublik').innerHTML = listHtml;
 
+                        // MENJALANKAN SUARA OTOMATIS GOOGLE MAPS
                         if (instructions.length > 0 && 'speechSynthesis' in window) {
-                            let nextInstruction = instructions[0].text; 
+                            let nextInstruction = instructions[0].text; // Mengambil instruksi pertama
+                            
+                            // Logika agar tidak spam suara saat rute terupdate tapi instruksinya masih sama
                             if(nextInstruction !== lastSpokenInstruction) {
-                                window.speechSynthesis.cancel(); 
+                                window.speechSynthesis.cancel(); // Stop suara yg numpuk
                                 let ucapan = new SpeechSynthesisUtterance("Arahkan perjalanan anda: " + nextInstruction);
-                                ucapan.lang = 'id-ID'; ucapan.rate = 0.9; 
+                                ucapan.lang = 'id-ID';
+                                ucapan.rate = 0.9; // Kecepatan ngomongnya disesuaikan
                                 window.speechSynthesis.speak(ucapan);
                                 lastSpokenInstruction = nextInstruction;
                             }
@@ -743,21 +724,31 @@
                     document.getElementById('btnBatalPublik').classList.remove('hidden'); 
                     publikMap.closePopup();
                 } else {
+                    // Update Waypoint saja jika control routing sudah terpasang
                     routingControlPublik.setWaypoints([currentLoc, L.latLng(tujuanLat, tujuanLng)]);
                 }
             },
             function(error) {
                 Swal.close();
-                Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Gagal mendeteksi lokasi. Pastikan GPS aktif.' });
+                Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Gagal mendeteksi lokasi kamu. Pastikan GPS HP/Laptop aktif.' });
             },
             { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
         );
     }
 
     function batalkanRutePublik() {
-        if (routingControlPublik) { publikMap.removeControl(routingControlPublik); routingControlPublik = null; }
-        if (watchIdPublik !== null) { navigator.geolocation.clearWatch(watchIdPublik); watchIdPublik = null; }
-        if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); lastSpokenInstruction = ""; }
+        if (routingControlPublik) { 
+            publikMap.removeControl(routingControlPublik); 
+            routingControlPublik = null; 
+        }
+        if (watchIdPublik !== null) { 
+            navigator.geolocation.clearWatch(watchIdPublik); 
+            watchIdPublik = null; 
+        }
+        if ('speechSynthesis' in window) { 
+            window.speechSynthesis.cancel(); // Matikan suara jika rute dibatalkan
+            lastSpokenInstruction = "";
+        }
         document.getElementById('kotakInfoRutePublik').classList.add('hidden');
         document.getElementById('btnBatalPublik').classList.add('hidden');
     }
@@ -767,12 +758,12 @@
         var kontenPopuler = document.getElementById('kontenPopulerPublik'); var kontenUlasan = document.getElementById('kontenUlasanPublik');
         if (tabName === 'populer') {
             kontenPopuler.classList.replace('hidden', 'block'); kontenUlasan.classList.replace('block', 'hidden');
-            btnPopuler.className = "flex-1 py-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 bg-white transition-all";
-            btnUlasan.className = "flex-1 py-3 text-xs md:text-sm font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-500 transition-all";
+            btnPopuler.className = "flex-1 py-3 text-sm font-bold text-blue-600 border-b-2 border-blue-600 bg-white transition-all";
+            btnUlasan.className = "flex-1 py-3 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-500 transition-all";
         } else {
             kontenPopuler.classList.replace('block', 'hidden'); kontenUlasan.classList.replace('hidden', 'block');
-            btnUlasan.className = "flex-1 py-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 bg-white transition-all";
-            btnPopuler.className = "flex-1 py-3 text-xs md:text-sm font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-500 transition-all";
+            btnUlasan.className = "flex-1 py-3 text-sm font-bold text-blue-600 border-b-2 border-blue-600 bg-white transition-all";
+            btnPopuler.className = "flex-1 py-3 text-sm font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-500 transition-all";
         }
     }
 
@@ -788,12 +779,14 @@
     }
 
     function kirimSaranPublikAJAX(e) {
-        e.preventDefault(); form = document.getElementById('formSaranUserPublik');
-        Swal.fire({ icon: 'info', title: 'Fitur Ulasan', text: 'Siap dihubungkan ke API backend.' }); form.reset();
+        e.preventDefault();
+        var form = document.getElementById('formSaranUserPublik');
+        Swal.fire({ icon: 'info', title: 'Fitur Ulasan', text: 'Fitur simpan ulasan dapat dihubungkan ke backend API Anda.' });
+        form.reset();
     }
 
     // ==========================================
-    // LOGIKA MODAL CRUD ADMIN (Fix Map Render)
+    // LOGIKA MODAL CRUD (ADMIN)
     // ==========================================
     function openModal(isEdit = false, encodedData = null) {
         document.getElementById('crud-modal').classList.remove('hidden');
@@ -804,65 +797,125 @@
             document.getElementById('modal-content').classList.add('scale-100');
         }, 10);
 
-        document.getElementById('crud-form').reset(); document.getElementById('form-id').value = '';
-        const gmapsInput = document.getElementById('form-gmaps'); if(gmapsInput) gmapsInput.value = '';
+        document.getElementById('crud-form').reset();
+        document.getElementById('form-id').value = '';
+        const gmapsInput = document.getElementById('form-gmaps');
+        if(gmapsInput) gmapsInput.value = '';
 
         let lat = defaultCenter[0], lng = defaultCenter[1];
 
         if (isEdit && encodedData) {
             const item = JSON.parse(decodeURIComponent(encodedData));
             document.getElementById('modal-title').innerText = 'Edit Data Hunian';
-            document.getElementById('form-id').value = item.id; document.getElementById('form-nama').value = item.nama_tipe;
-            document.getElementById('form-harga').value = item.harga; document.getElementById('form-status').value = item.status;
+            document.getElementById('form-id').value = item.id;
+            document.getElementById('form-nama').value = item.nama_tipe;
+            document.getElementById('form-harga').value = item.harga;
+            document.getElementById('form-status').value = item.status;
             lat = item.latitude; lng = item.longitude;
-        } else { document.getElementById('modal-title').innerText = 'Tambah Data Spasial'; }
+        } else {
+            document.getElementById('modal-title').innerText = 'Tambah Data Spasial Baru';
+        }
 
-        document.getElementById('form-lat').value = lat; document.getElementById('form-lng').value = lng;
+        document.getElementById('form-lat').value = lat;
+        document.getElementById('form-lng').value = lng;
 
-        // Waktu render ditingkatkan agak lama agar flexbox selesai nge-draw di HP
         setTimeout(() => {
             if (!modalMap) {
                 const modalBaseLayers = createBaseLayers();
                 modalMap = L.map('modal-map', { layers: [modalBaseLayers.googleRoadmap] }).setView([lat, lng], 16);
-                L.control.layers({ 'Google Maps': modalBaseLayers.googleRoadmap, 'Google Satelit': modalBaseLayers.googleSatellite }, null, { position: 'topleft' }).addTo(modalMap);
+                L.control.layers({
+                    'Google Maps': modalBaseLayers.googleRoadmap,
+                    'Google Satelit': modalBaseLayers.googleSatellite,
+                    'Peta Ringan': modalBaseLayers.carto
+                }, null, { position: 'topleft' }).addTo(modalMap);
                 modalMarker = L.marker([lat, lng], { draggable: true }).addTo(modalMap);
                 
-                modalMarker.on('dragend', function() { const pos = modalMarker.getLatLng(); document.getElementById('form-lat').value = pos.lat.toFixed(8); document.getElementById('form-lng').value = pos.lng.toFixed(8); });
-                modalMap.on('click', function(e) { modalMarker.setLatLng(e.latlng); document.getElementById('form-lat').value = e.latlng.lat.toFixed(8); document.getElementById('form-lng').value = e.latlng.lng.toFixed(8); });
+                modalMarker.on('dragend', function() {
+                    const pos = modalMarker.getLatLng();
+                    document.getElementById('form-lat').value = pos.lat.toFixed(8);
+                    document.getElementById('form-lng').value = pos.lng.toFixed(8);
+                });
+                modalMap.on('click', function(e) {
+                    modalMarker.setLatLng(e.latlng);
+                    document.getElementById('form-lat').value = e.latlng.lat.toFixed(8);
+                    document.getElementById('form-lng').value = e.latlng.lng.toFixed(8);
+                });
             } else {
-                modalMap.invalidateSize(); modalMap.setView([lat, lng], 16); modalMarker.setLatLng([lat, lng]);
+                modalMap.invalidateSize();
+                modalMap.setView([lat, lng], 16);
+                modalMarker.setLatLng([lat, lng]);
             }
-        }, 400); 
+        }, 200);
     }
 
     function closeModal() {
         document.getElementById('crud-modal').classList.add('opacity-0');
-        document.getElementById('modal-content').classList.remove('scale-100'); document.getElementById('modal-content').classList.add('scale-95');
-        setTimeout(() => { document.getElementById('crud-modal').classList.add('hidden'); document.getElementById('crud-modal').classList.remove('flex'); }, 300);
+        document.getElementById('modal-content').classList.remove('scale-100');
+        document.getElementById('modal-content').classList.add('scale-95');
+        setTimeout(() => {
+            document.getElementById('crud-modal').classList.add('hidden');
+            document.getElementById('crud-modal').classList.remove('flex');
+        }, 300);
     }
 
     document.getElementById('crud-form').addEventListener('submit', async (e) => {
-        e.preventDefault(); const idInput = document.getElementById('form-id').value;
-        const newData = { nama_tipe: document.getElementById('form-nama').value, harga: document.getElementById('form-harga').value, status: document.getElementById('form-status').value, latitude: document.getElementById('form-lat').value, longitude: document.getElementById('form-lng').value };
-        const url = idInput ? `/api/hunian/${idInput}` : '/api/hunian'; const method = idInput ? 'PUT' : 'POST';
+        e.preventDefault();
+        const idInput = document.getElementById('form-id').value;
+        const newData = {
+            nama_tipe: document.getElementById('form-nama').value,
+            harga: document.getElementById('form-harga').value,
+            status: document.getElementById('form-status').value,
+            latitude: document.getElementById('form-lat').value,
+            longitude: document.getElementById('form-lng').value
+        };
+
+        const url = idInput ? `/api/hunian/${idInput}` : '/api/hunian';
+        const method = idInput ? 'PUT' : 'POST';
 
         try {
-            const response = await fetch(url, { method: method, headers: getAuthHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify(newData) });
-            if (handleUnauthorized(response)) return; const result = await response.json();
-            if (result.success) { closeModal(); loadDataDariDatabase(); Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1500, showConfirmButton: false }); } 
-            else { Swal.fire({ icon: 'error', title: 'Gagal', text: result.message }); }
-        } catch (error) { Swal.fire({ icon: 'error', title: 'Error Sistem', text: 'Terjadi kesalahan jaringan.' }); }
+            const response = await fetch(url, {
+                method: method, headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify(newData)
+            });
+            if (handleUnauthorized(response)) return;
+            const result = await response.json();
+
+            if (result.success) {
+                closeModal();
+                loadDataDariDatabase();
+                Swal.fire({ icon: 'success', title: 'Tersimpan', timer: 1500, showConfirmButton: false });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Gagal', text: result.message });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error Sistem', text: 'Terjadi kesalahan jaringan.' });
+        }
     });
 
     async function deleteData(id) {
-        const result = await Swal.fire({ title: 'Hapus Permanen?', text: "Data tidak bisa dikembalikan!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e11d48', cancelButtonColor: '#94a3b8', confirmButtonText: 'Ya, hapus!' });
+        const result = await Swal.fire({
+            title: 'Hapus Permanen?', text: "Data ini tidak bisa dikembalikan!",
+            icon: 'warning', showCancelButton: true, confirmButtonColor: '#e11d48', cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Ya, hapus!'
+        });
+        
         if (result.isConfirmed) {
             try {
-                const res = await fetch(`/api/hunian/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
-                if (handleUnauthorized(res)) return; const data = await res.json();
-                if (data.success) { loadDataDariDatabase(); Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success'); } 
-                else { Swal.fire('Gagal!', data.message, 'error'); }
-            } catch (error) { Swal.fire('Error!', 'Sistem bermasalah.', 'error'); }
+                const res = await fetch(`/api/hunian/${id}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeaders()
+                });
+                if (handleUnauthorized(res)) return;
+                const data = await res.json();
+                if (data.success) {
+                    loadDataDariDatabase();
+                    Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
+                } else {
+                    Swal.fire('Gagal!', data.message, 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error!', 'Sistem bermasalah.', 'error');
+            }
         }
     }
 
@@ -870,20 +923,31 @@
     // LOGIKA ADMIN ROUTING MAP UTAMA
     // ==========================================
     function hapusRuteAktif() {
-        if (routingControl) { mainMap.removeControl(routingControl); routingControl = null; document.getElementById('btn-hapus-rute').classList.add('hidden'); }
+        if (routingControl) {
+            mainMap.removeControl(routingControl);
+            routingControl = null;
+            document.getElementById('btn-hapus-rute').classList.add('hidden');
+            if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); }
+        }
         if (navigator.geolocation && watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
     }
 
     function tampilkanRute(destLat, destLng) {
-        switchTab('dashboard'); document.getElementById('btn-hapus-rute').classList.remove('hidden'); hapusRuteAktif(); document.getElementById('btn-hapus-rute').classList.remove('hidden'); 
+        switchTab('dashboard');
+        document.getElementById('btn-hapus-rute').classList.remove('hidden');
+        hapusRuteAktif();
+        document.getElementById('btn-hapus-rute').classList.remove('hidden'); 
         
         if (navigator.geolocation) {
-            Swal.fire({ title: 'Mendeteksi Lokasi Terkini...', text: 'Mohon izinkan akses', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            Swal.fire({ title: 'Mendeteksi Lokasi Terkini...', text: 'Mohon izinkan akses lokasi', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
             watchId = navigator.geolocation.watchPosition(
                 (position) => {
-                    Swal.close(); const currentLat = position.coords.latitude; const currentLng = position.coords.longitude;
+                    Swal.close();
+                    const currentLat = position.coords.latitude; const currentLng = position.coords.longitude;
                     if (routingControl) {
-                        const waypoints = routingControl.getWaypoints(); waypoints[0].latLng = L.latLng(currentLat, currentLng); routingControl.setWaypoints(waypoints);
+                        const waypoints = routingControl.getWaypoints();
+                        waypoints[0].latLng = L.latLng(currentLat, currentLng);
+                        routingControl.setWaypoints(waypoints);
                     } else { prosesBuatRute(currentLat, currentLng, destLat, destLng); }
                 },
                 (error) => { Swal.close(); prosesBuatRute(defaultCenter[0], defaultCenter[1], destLat, destLng); },
@@ -905,20 +969,45 @@
     }
 
     function logout() {
-        Swal.fire({ title: 'Keluar Akun?', icon: 'question', showCancelButton: true, confirmButtonText: 'Keluar', confirmButtonColor: '#e11d48' }).then((result) => {
+        Swal.fire({
+            title: 'Keluar Akun?', icon: 'question', showCancelButton: true,
+            confirmButtonText: 'Keluar', confirmButtonColor: '#e11d48'
+        }).then((result) => {
             if (result.isConfirmed) {
-                fetch('/api/logout', { method: 'POST', headers: getAuthHeaders() }).finally(() => { localStorage.removeItem('adminToken'); window.location.replace('/login'); });
+                fetch('/api/logout', { method: 'POST', headers: getAuthHeaders() })
+                .finally(() => {
+                    localStorage.removeItem('adminToken');
+                    window.location.replace('/login');
+                });
             }
         });
     }
 
-    window.onload = () => { initMainMap(); initPublikMap(); loadDataDariDatabase(); };
+    // ==========================================
+    // EKSEKUSI SAAT HALAMAN SELESAI DIMUAT
+    // ==========================================
+    window.onload = () => {
+        initMainMap();
+        initPublikMap();
+        loadDataDariDatabase(); 
+    };
 
+    // ==========================================
+    // TAMBAHAN FUNGSI UNTUK MENCEGAH ERROR SIMPAN DATA
+    // ==========================================
     function handleUnauthorized(response) {
         if (response.status === 401 || response.status === 403) {
-            Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Sesi habis. Silakan login kembali.' }).then(() => { localStorage.removeItem('adminToken'); window.location.replace('/login'); });
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: 'Sesi Anda tidak valid atau sudah habis. Silakan login kembali.'
+            }).then(() => {
+                localStorage.removeItem('adminToken');
+                window.location.replace('/login');
+            });
             return true;
-        } return false;
+        }
+        return false;
     }
     </script>
 </body>
