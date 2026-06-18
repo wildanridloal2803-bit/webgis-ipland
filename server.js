@@ -2,11 +2,16 @@ const express = require('express');
 const path = require('path');
 const crypto = require('crypto');
 const propertyController = require('./controllers/propertyController');
+const db = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SESSION_COOKIE = 'ipland_admin_token';
 const activeSessions = new Set();
+
+const hashPassword = (password) => {
+    return crypto.createHash('sha256').update(password).digest('hex');
+};
 
 app.use(express.json());
 
@@ -105,19 +110,55 @@ app.get('/admin.html', requireAdminPage, (req, res) => {
     res.redirect('/dashboard');
 });
 
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    const adminUser = process.env.ADMIN_USER || 'admin';
-    const adminPass = process.env.ADMIN_PASS || 'ipland123';
+app.post('/api/login', async (req, res) => {
+    try {
+        const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
 
-    if (username === adminUser && password === adminPass) {
+        if (!username || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Username dan password wajib diisi'
+            });
+        }
+
+        const [rows] = await db.query(
+            `SELECT id, username, password_hash, nama, is_active
+             FROM admins
+             WHERE username = ? AND is_active = 1
+             LIMIT 1`,
+            [username]
+        );
+
+        const admin = rows[0];
+
+        if (!admin || admin.password_hash !== hashPassword(password)) {
+            return res.status(401).json({
+                success: false,
+                message: 'Username atau password salah'
+            });
+        }
+
         const token = crypto.randomBytes(32).toString('hex');
         activeSessions.add(token);
         setSessionCookie(res, token);
-        return res.json({ success: true, token });
-    }
 
-    res.status(401).json({ success: false, message: 'Username atau password salah' });
+        return res.json({
+            success: true,
+            token,
+            admin: {
+                id: admin.id,
+                username: admin.username,
+                nama: admin.nama
+            }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Terjadi kesalahan pada server'
+        });
+    }
 });
 
 app.post('/api/logout', requireAdmin, (req, res) => {
