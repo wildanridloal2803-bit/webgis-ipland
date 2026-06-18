@@ -922,22 +922,22 @@
         loadDataDariDatabase(); // Memanggil data dari API
     };
 // ==========================================
-    // TAMBAHAN FUNGSI UNTUK MENCEGAH ERROR SIMPAN DATA
-    // ==========================================
-    function handleUnauthorized(response) {
-        if (response.status === 401 || response.status === 403) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Akses Ditolak',
-                text: 'Sesi Anda tidak valid atau sudah habis. Silakan login kembali.'
-            }).then(() => {
-                localStorage.removeItem('adminToken');
-                window.location.replace('/login');
-            });
-            return true;
-        }
-        return false;
-    }
+    // TAMBAHAN FUNGSI UNTUK MENCEGAH ERROR SIMPAN DATA
+    // ==========================================
+    function handleUnauthorized(response) {
+        if (response.status === 401 || response.status === 403) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: 'Sesi Anda tidak valid atau sudah habis. Silakan login kembali.'
+            }).then(() => {
+                localStorage.removeItem('adminToken');
+                window.location.replace('/login');
+            });
+            return true;
+        }
+        return false;
+    }
 </script>
 </body>
 </html>
