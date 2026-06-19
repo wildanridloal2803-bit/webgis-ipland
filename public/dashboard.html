@@ -299,6 +299,14 @@
                             <input type="text" id="form-nama" class="w-full border border-slate-300 rounded-xl p-2.5 md:p-3 text-sm md:text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all" required>
                         </div>
                         <div>
+    <label class="block text-xs md:text-sm font-semibold text-slate-700 mb-1">Kategori Hunian</label>
+    <select id="form-kategori" class="w-full border border-slate-300 rounded-xl p-2.5 md:p-3 text-sm md:text-base focus:ring-2 focus:ring-emerald-500 outline-none bg-white transition-all">
+        <option value="Subsidi">Subsidi</option>
+        <option value="Komersil">Komersil</option>
+        <option value="Cluster Premium">Cluster Premium</option>
+    </select>
+</div>
+                        <div>
                             <label class="block text-xs md:text-sm font-semibold text-slate-700 mb-1">Harga (Rp)</label>
                             <div class="relative">
                                 <span class="absolute left-3 top-2.5 md:top-3 text-slate-500 text-sm md:text-base">Rp</span>
@@ -876,7 +884,8 @@
             document.getElementById('modal-content').classList.add('scale-100');
         }, 10);
 
-        document.getElementById('crud-form').reset(); document.getElementById('form-id').value = '';
+        document.getElementById('crud-form').reset(); 
+        document.getElementById('form-id').value = '';
         const gmapsInput = document.getElementById('form-gmaps'); if(gmapsInput) gmapsInput.value = '';
 
         let lat = defaultCenter[0], lng = defaultCenter[1];
@@ -884,8 +893,11 @@
         if (isEdit && encodedData) {
             const item = JSON.parse(decodeURIComponent(encodedData));
             document.getElementById('modal-title').innerText = 'Edit Data Hunian';
-            document.getElementById('form-id').value = item.id; document.getElementById('form-nama').value = item.nama_tipe;
-            document.getElementById('form-harga').value = item.harga; document.getElementById('form-status').value = item.status;
+            document.getElementById('form-id').value = item.id; 
+            document.getElementById('form-nama').value = item.nama_tipe;
+            document.getElementById('form-kategori').value = item.kategori || 'Komersil';
+            document.getElementById('form-harga').value = item.harga; 
+            document.getElementById('form-status').value = item.status;
             lat = item.latitude; lng = item.longitude;
         } else { document.getElementById('modal-title').innerText = 'Tambah Data Spasial'; }
 
@@ -915,7 +927,13 @@
 
     document.getElementById('crud-form').addEventListener('submit', async (e) => {
         e.preventDefault(); const idInput = document.getElementById('form-id').value;
-        const newData = { nama_tipe: document.getElementById('form-nama').value, harga: document.getElementById('form-harga').value, status: document.getElementById('form-status').value, latitude: document.getElementById('form-lat').value, longitude: document.getElementById('form-lng').value };
+        const newData = { 
+            nama_tipe: document.getElementById('form-nama').value,
+            kategori: document.getElementById('form-kategori').value, 
+            harga: document.getElementById('form-harga').value, 
+            status: document.getElementById('form-status').value, 
+            latitude: document.getElementById('form-lat').value, 
+            longitude: document.getElementById('form-lng').value };
         const url = idInput ? `/api/hunian/${idInput}` : '/api/hunian'; const method = idInput ? 'PUT' : 'POST';
 
         try {

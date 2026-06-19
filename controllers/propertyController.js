@@ -1,9 +1,11 @@
 const PropertyModel = require('../models/propertyModel');
 
 const allowedStatuses = ['Tersedia', 'Booking', 'Terjual'];
-
+const allowedKategori = ['Subsidi', 'Komersil', 'Cluster Premium'];
 const validateHunianPayload = (payload) => {
     const nama_tipe = typeof payload.nama_tipe === 'string' ? payload.nama_tipe.trim() : '';
+    const kategoriInput = typeof payload.kategori === 'string' ? payload.kategori.trim() : '';
+    const kategori = kategoriInput || 'Komersil';
     const harga = Number(payload.harga);
     const status = payload.status;
     const rute_url = typeof payload.rute_url === 'string' ? payload.rute_url.trim() : '';
@@ -12,6 +14,7 @@ const validateHunianPayload = (payload) => {
     const longitude = Number(payload.longitude);
 
     if (!nama_tipe) return { error: 'Nama atau tipe hunian wajib diisi' };
+    if (!allowedKategori.includes(kategori)) return { error: 'Kategori hunian tidak valid' };
     if (!Number.isFinite(harga) || harga <= 0) return { error: 'Harga harus berupa angka positif' };
     if (!allowedStatuses.includes(status)) return { error: 'Status hunian tidak valid' };
     if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90) return { error: 'Latitude tidak valid' };
@@ -20,6 +23,7 @@ const validateHunianPayload = (payload) => {
     return {
         data: {
             nama_tipe,
+            kategori,
             harga,
             status,
             rute_url: rute_url || `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`,
