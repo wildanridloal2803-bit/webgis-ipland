@@ -183,15 +183,15 @@
                         <p class="text-xs md:text-sm text-gray-500 mt-2">Temukan properti hunian terbaik dan rute jalan terakurat</p>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="lg:col-span-2 space-y-4">
+                    <div class="grid grid-cols-1 gap-6 max-w-7xl mx-auto">
+                        <div class="space-y-4">
                             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 md:p-4">
-                                <div class="flex flex-col sm:flex-row gap-3">
+                                <div class="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-3">
                                     <div class="flex-1 relative">
                                         <input type="text" id="keywordNamaPublik" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm text-gray-800" placeholder="Cari tipe hunian / lokasi..." onkeyup="filterPetaPublik()" autocomplete="off">
                                         <div id="wadahHasilPencarianPublik" class="absolute z-[2000] w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg hidden max-h-60 overflow-y-auto"></div>
                                     </div>
-                                    <div class="sm:w-48">
+                                    <div class="w-full">
                                         <select id="filterKategoriPublik" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm cursor-pointer" onchange="filterPetaPublik()">
                                             <option value="semua">Semua Tipe</option>
                                             <option value="Subsidi">Subsidi</option>
@@ -210,7 +210,7 @@
                                     </button>
                                     <button id="btnBatalPublik" class="bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-medium py-2 px-3 rounded-lg shadow-sm hidden transition-all duration-200 text-left sm:text-center" onclick="batalkanRutePublik()">Batalkan Rute</button>
                                 </div>
-                                <div id="publik-map" class="w-full h-[350px] md:h-[500px]"></div>
+                                <div id="publik-map" class="w-full h-[420px] md:h-[560px] lg:h-[650px]"></div>
                             </div>
 
                             <div id="kotakInfoRutePublik" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hidden transition-all duration-300">
@@ -569,42 +569,89 @@
     // RENDER PETA PUBLIK
     // ==========================================
     function refreshPublikMapMarkers() {
-        markerPublikArray.forEach(m => publikMap.removeLayer(m.objekMarker));
-        markerPublikArray = [];
+    if (!publikMap) return;
 
-        const ikonDefault = L.icon({ 
-            iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', 
-            iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -28] 
+    markerPublikArray.forEach(m => {
+        if (publikMap.hasLayer(m.objekMarker)) {
+            publikMap.removeLayer(m.objekMarker);
+        }
+    });
+
+    markerPublikArray = [];
+
+    const ikonDefault = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -34]
+    });
+
+    const bounds = [];
+
+    dbHunian.forEach(item => {
+        const latitude = Number(String(item.latitude).replace(',', '.'));
+        const longitude = Number(String(item.longitude).replace(',', '.'));
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+            console.warn('Koordinat tidak valid, marker dilewati:', item);
+            return;
+        }
+
+        const idHunian = item.id;
+        const namaTipe = escapeHtml(item.nama_tipe);
+        const kategori = item.kategori && String(item.kategori).trim()
+            ? String(item.kategori).trim()
+            : 'Komersil';
+
+        const harga = formatRupiah(item.harga);
+        const status = escapeHtml(item.status || 'Tersedia');
+
+        const popupContent = `
+            <div style="width:230px;">
+                <h4 style="font-size:16px; font-weight:800; color:#1f2937; margin-bottom:6px;">
+                    ${namaTipe}
+                </h4>
+
+                <div style="font-size:12px; color:#64748b; margin-bottom:8px;">
+                    <b>Kategori:</b> ${escapeHtml(kategori)}<br>
+                    <b>Status:</b> ${status}
+                </div>
+
+                <p style="font-size:14px; color:#059669; font-weight:800; margin-bottom:10px;">
+                    Rp ${harga}
+                </p>
+
+                <button 
+                    style="width:100%; padding:8px 0; background-color:#2563eb; color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px; font-weight:800;"
+                    onclick="buatRuteJalanPublik(${latitude}, ${longitude})">
+                    Rute ke Sini
+                </button>
+            </div>
+        `;
+
+        const marker = L.marker([latitude, longitude], { icon: ikonDefault })
+            .bindPopup(popupContent)
+            .addTo(publikMap);
+
+        markerPublikArray.push({
+            objekMarker: marker,
+            id: idHunian,
+            nama: String(item.nama_tipe || '').toLowerCase(),
+            kategori: kategori
         });
 
-        dbHunian.forEach(item => {
-            const latitude = Number(item.latitude);
-            const longitude = Number(item.longitude);
-            if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
-            
-            const idHunian = item.id;
-            const namaTipe = escapeHtml(item.nama_tipe);
-            const kategori = escapeHtml(item.kategori || 'Komersil'); 
-            
-            const popupContent = `<div style='width:160px; md:width:190px;'>
-                               <h4 style='font-size:12px; font-weight:bold; color:#1f2937; margin-bottom:2px;'>${namaTipe}</h4>
-                               <p style='font-size:10px; color:#3b82f6; font-weight:bold;'>${kategori}</p>
-                               <button style='width:100%; padding:6px 0; background-color:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-size:11px; font-weight:bold; margin-top:8px;' onclick='buatRuteJalanPublik(${latitude}, ${longitude})'> Rute ke Sini</button>
-                               </div>`;
-                               
-            const marker = L.marker([latitude, longitude], { icon: ikonDefault }).bindPopup(popupContent);
-            
-            marker.on('click', () => {
-                aktifkanFormSaranPublik(idHunian, namaTipe);
-                idHunianTerpilihPublik = idHunian;
-                bukaTabPublik('ulasan'); 
-            });
-            
-            marker.addTo(publikMap);
-            markerPublikArray.push({ objekMarker: marker, id: idHunian, nama: namaTipe.toLowerCase(), kategori: kategori });
+        bounds.push([latitude, longitude]);
+    });
+
+    if (bounds.length > 0) {
+        publikMap.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 14
         });
-        renderPopulerPublik();
     }
+
+    console.log(`Marker publik tampil: ${markerPublikArray.length} dari ${dbHunian.length} data hunian`);
+}
 
     function renderPopulerPublik() {
         const kontenPopuler = document.getElementById('kontenPopulerPublik');
@@ -636,30 +683,64 @@
     // LOGIKA FILTER PUBLIK
     // ==========================================
     function filterPetaPublik() {
-        var inputCari = document.getElementById('keywordNamaPublik');
-        var kataKunci = inputCari.value.toLowerCase();
-        var kategoriTerpilih = document.getElementById('filterKategoriPublik').value;
-        var wadahHasil = document.getElementById('wadahHasilPencarianPublik');
-        var htmlHasil = ''; var jumlahCocok = 0;
+    const inputCari = document.getElementById('keywordNamaPublik');
+    const selectKategori = document.getElementById('filterKategoriPublik');
+    const wadahHasil = document.getElementById('wadahHasilPencarianPublik');
 
-        markerPublikArray.forEach(function(item) {
-            var cocokKataKunci = item.nama.includes(kataKunci);
-            var cocokKategori = (kategoriTerpilih === "semua" || item.kategori === kategoriTerpilih);
-            
-            if (cocokKataKunci && cocokKategori) { 
-                publikMap.addLayer(item.objekMarker); 
-                if (kataKunci.length > 0) {
-                    var koordLat = item.objekMarker.getLatLng().lat;
-                    var koordLng = item.objekMarker.getLatLng().lng;
-                    htmlHasil += `<div class="p-3 border-b border-gray-100 hover:bg-blue-50 cursor-pointer" onclick="pilihHasilPencarianPublik(${item.id}, ${koordLat}, ${koordLng}, '${item.nama}')"><p class="text-xs md:text-sm font-bold text-gray-800 capitalize">${item.nama}</p></div>`;
-                    jumlahCocok++;
-                }
-            } else { publikMap.removeLayer(item.objekMarker); }
-        });
+    const kataKunci = inputCari ? inputCari.value.toLowerCase().trim() : '';
+    const kategoriTerpilih = selectKategori ? selectKategori.value : 'semua';
 
-        if (kataKunci.length > 0 && jumlahCocok > 0) { wadahHasil.innerHTML = htmlHasil; wadahHasil.classList.remove('hidden'); } 
-        else { wadahHasil.classList.add('hidden'); }
+    let htmlHasil = '';
+    let jumlahCocok = 0;
+    const bounds = [];
+
+    markerPublikArray.forEach(item => {
+        const cocokKataKunci = item.nama.includes(kataKunci);
+        const cocokKategori = kategoriTerpilih === 'semua' || item.kategori === kategoriTerpilih;
+
+        if (cocokKataKunci && cocokKategori) {
+            if (!publikMap.hasLayer(item.objekMarker)) {
+                publikMap.addLayer(item.objekMarker);
+            }
+
+            const latLng = item.objekMarker.getLatLng();
+            bounds.push(latLng);
+
+            if (kataKunci.length > 0) {
+                htmlHasil += `
+                    <div class="p-3 border-b border-gray-100 hover:bg-blue-50 cursor-pointer"
+                         onclick="pilihHasilPencarianPublik(${item.id}, ${latLng.lat}, ${latLng.lng}, '${item.nama}')">
+                        <p class="text-xs md:text-sm font-bold text-gray-800 capitalize">${item.nama}</p>
+                        <p class="text-[10px] text-gray-500">${item.kategori}</p>
+                    </div>
+                `;
+                jumlahCocok++;
+            }
+        } else {
+            if (publikMap.hasLayer(item.objekMarker)) {
+                publikMap.removeLayer(item.objekMarker);
+            }
+        }
+    });
+
+    if (wadahHasil) {
+        if (kataKunci.length > 0 && jumlahCocok > 0) {
+            wadahHasil.innerHTML = htmlHasil;
+            wadahHasil.classList.remove('hidden');
+        } else {
+            wadahHasil.classList.add('hidden');
+        }
     }
+
+    if (bounds.length > 0 && kataKunci.length === 0) {
+        publikMap.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 14
+        });
+    }
+
+    console.log(`Filter aktif: ${jumlahCocok || bounds.length} marker cocok`);
+}
 
     function pilihHasilPencarianPublik(id, lat, lng, namaPilihan) {
         document.getElementById('keywordNamaPublik').value = namaPilihan.toUpperCase(); 
