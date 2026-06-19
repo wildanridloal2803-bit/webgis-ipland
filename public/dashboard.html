@@ -285,7 +285,7 @@
     <div id="crud-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[3000] fade-in opacity-0 transition-opacity duration-300 p-4">
         <div class="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col lg:flex-row overflow-hidden transform scale-95 transition-transform duration-300 max-h-[95vh]" id="modal-content">
             
-            <div class="w-full lg:w-1/2 p-5 md:p-8 flex flex-col overflow-y-auto" style="max-height: 60vh; lg:max-height: 85vh;">
+            <div class="w-full lg:w-1/2 p-5 md:p-8 flex flex-col overflow-y-auto max-h-[60vh] lg:max-h-[85vh]">
                 <div class="flex justify-between items-center mb-4 md:mb-6 shrink-0">
                     <h3 id="modal-title" class="text-xl md:text-2xl font-bold text-slate-800">Tambah Data Hunian</h3>
                     <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 transition-colors text-xl md:text-2xl"><i class="fas fa-times"></i></button>
@@ -683,82 +683,149 @@
     }
 
     function buatRuteJalanPublik(tujuanLat, tujuanLng) {
-        if (!navigator.geolocation) {
-            Swal.fire({ icon: 'error', title: 'Oops!', text: 'Browser tidak mendukung deteksi lokasi.' });
-            return;
-        }
-
+    if (!navigator.geolocation) {
         Swal.fire({
-            title: 'Mendeteksi Lokasi Terkini...', text: 'Mohon izinkan akses GPS', allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
+            icon: 'error',
+            title: 'Oops!',
+            text: 'Browser tidak mendukung deteksi lokasi.'
         });
+        return;
+    }
 
-        if (routingControlPublik) { publikMap.removeControl(routingControlPublik); }
-        if (watchIdPublik !== null) { navigator.geolocation.clearWatch(watchIdPublik); }
+    Swal.fire({
+        title: 'Mendeteksi Lokasi Terkini...',
+        text: 'Mohon izinkan akses GPS',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
-        watchIdPublik = navigator.geolocation.watchPosition(
-            function(position) {
-                Swal.close();
-                const currentLat = position.coords.latitude;
-                const currentLng = position.coords.longitude;
-                const currentLoc = L.latLng(currentLat, currentLng);
+    if (routingControlPublik) {
+        publikMap.removeControl(routingControlPublik);
+        routingControlPublik = null;
+    }
 
+    if (watchIdPublik !== null) {
+        navigator.geolocation.clearWatch(watchIdPublik);
+        watchIdPublik = null;
+    }
+
+    watchIdPublik = navigator.geolocation.watchPosition(
+        function(position) {
+            Swal.close();
+
+            const currentLat = position.coords.latitude;
+            const currentLng = position.coords.longitude;
+            const currentLoc = L.latLng(currentLat, currentLng);
+
+            if (!routingControlPublik) {
                 routingControlPublik = L.Routing.control({
-                    waypoints: [currentLoc, L.latLng(tujuanLat, tujuanLng)],
-                    createMarker: function() { return null; },
+                    waypoints: [
+                        currentLoc,
+                        L.latLng(tujuanLat, tujuanLng)
+                    ],
+                    createMarker: function() {
+                        return null;
+                    },
                     routeWhileDragging: false,
                     addWaypoints: false,
                     lineOptions: {
-                        styles: [{ color: '#3b82f6', opacity: 0.8, weight: 5 }]
+                        styles: [
+                            {
+                                color: '#3b82f6',
+                                opacity: 0.8,
+                                weight: 5
+                            }
+                        ]
                     },
                     router: L.Routing.osrmv1({
                         profile: 'driving'
                     })
                 }).addTo(publikMap);
 
-                    routingControlPublik.on('routesfound', function(e) {
-                        var routes = e.routes[0];
-                        var summary = routes.summary;
-                        document.getElementById('txtJarakPublik').innerText = (summary.totalDistance / 1000).toFixed(1) + " Km";
-                        document.getElementById('txtWaktuPublik').innerText = Math.round(summary.totalTime / 60) + " Menit";
-                        document.getElementById('kotakInfoRutePublik').classList.remove('hidden');
+                routingControlPublik.on('routesfound', function(e) {
+                    const routes = e.routes[0];
+                    const summary = routes.summary;
 
-                        var instructions = routes.instructions;
-                        var listHtml = '';
-                        instructions.forEach(function(inst) {
-                            listHtml += `<li class="p-2 md:p-3 text-[10px] md:text-sm text-gray-700 flex justify-between border-b border-gray-50 gap-2">
-                                            <span>${inst.text}</span>
-                                            <span class="font-bold text-blue-500 whitespace-nowrap">${inst.distance ? Math.round(inst.distance) + ' m' : ''}</span>
-                                         </li>`;
-                        });
-                        document.getElementById('listInstruksiPublik').innerHTML = listHtml;
+                    document.getElementById('txtJarakPublik').innerText =
+                        (summary.totalDistance / 1000).toFixed(1) + ' Km';
 
-                        if (instructions.length > 0 && 'speechSynthesis' in window) {
-                            let nextInstruction = instructions[0].text; 
-                            if(nextInstruction !== lastSpokenInstruction) {
-                                window.speechSynthesis.cancel(); 
-                                let ucapan = new SpeechSynthesisUtterance("Arahkan perjalanan anda: " + nextInstruction);
-                                ucapan.lang = 'id-ID'; ucapan.rate = 0.9; 
-                                window.speechSynthesis.speak(ucapan);
-                                lastSpokenInstruction = nextInstruction;
-                            }
-                        }
+                    document.getElementById('txtWaktuPublik').innerText =
+                        Math.round(summary.totalTime / 60) + ' Menit';
+
+                    document.getElementById('kotakInfoRutePublik').classList.remove('hidden');
+
+                    const instructions = routes.instructions;
+                    let listHtml = '';
+
+                    instructions.forEach(function(inst) {
+                        listHtml += `
+                            <li class="p-2 md:p-3 text-[10px] md:text-sm text-gray-700 flex justify-between border-b border-gray-50 gap-2">
+                                <span>${inst.text}</span>
+                                <span class="font-bold text-blue-500 whitespace-nowrap">
+                                    ${inst.distance ? Math.round(inst.distance) + ' m' : ''}
+                                </span>
+                            </li>
+                        `;
                     });
 
-                    document.getElementById('btnBatalPublik').classList.remove('hidden'); 
-                    publikMap.closePopup();
-                } else {
-                    routingControlPublik.setWaypoints([currentLoc, L.latLng(tujuanLat, tujuanLng)]);
-                }
-            },
-            function(error) {
-                Swal.close();
-                Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Gagal mendeteksi lokasi. Pastikan GPS aktif.' });
-            },
-            { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
-        );
-    }
+                    document.getElementById('listInstruksiPublik').innerHTML = listHtml;
 
+                    if (instructions.length > 0 && 'speechSynthesis' in window) {
+                        const nextInstruction = instructions[0].text;
+
+                        if (nextInstruction !== lastSpokenInstruction) {
+                            window.speechSynthesis.cancel();
+
+                            const ucapan = new SpeechSynthesisUtterance(
+                                'Arahkan perjalanan anda: ' + nextInstruction
+                            );
+
+                            ucapan.lang = 'id-ID';
+                            ucapan.rate = 0.9;
+
+                            window.speechSynthesis.speak(ucapan);
+                            lastSpokenInstruction = nextInstruction;
+                        }
+                    }
+                });
+
+                document.getElementById('btnBatalPublik').classList.remove('hidden');
+                publikMap.closePopup();
+            } else {
+                routingControlPublik.setWaypoints([
+                    currentLoc,
+                    L.latLng(tujuanLat, tujuanLng)
+                ]);
+            }
+        },
+        function(error) {
+            Swal.close();
+
+            let pesan = 'Gagal mendeteksi lokasi. Pastikan GPS aktif dan izin lokasi sudah diberikan.';
+
+            if (error.code === 1) {
+                pesan = 'Akses lokasi ditolak. Izinkan lokasi pada browser terlebih dahulu.';
+            } else if (error.code === 2) {
+                pesan = 'Lokasi tidak tersedia. Pastikan GPS/perangkat lokasi aktif.';
+            } else if (error.code === 3) {
+                pesan = 'Deteksi lokasi terlalu lama. Coba ulangi beberapa detik lagi.';
+            }
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lokasi Tidak Terbaca',
+                text: pesan
+            });
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 20000
+        }
+    );
+}
     function batalkanRutePublik() {
         if (routingControlPublik) { publikMap.removeControl(routingControlPublik); routingControlPublik = null; }
         if (watchIdPublik !== null) { navigator.geolocation.clearWatch(watchIdPublik); watchIdPublik = null; }
