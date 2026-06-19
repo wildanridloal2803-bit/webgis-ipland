@@ -548,9 +548,9 @@
                     <b class="text-sm md:text-base">${namaTipe}</b><br>
                     <span class="text-emerald-600 font-semibold text-xs md:text-sm">Rp ${harga}</span>
                     <div class="mt-2 flex gap-2">
-                        <button onclick="tampilkanRute(${latitude}, ${longitude})" class="text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded px-2 py-1.5 transition-colors w-full text-center border-none cursor-pointer">
-                            <i class="fas fa-location-arrow mr-1"></i> Rute ke Sini
-                        </button>
+                        <button onclick="bukaDiWebGISPublik(${item.id}, ${latitude}, ${longitude})" class="text-blue-600 hover:text-blue-700 font-semibold text-xs flex items-center gap-1 bg-transparent border-none cursor-pointer whitespace-nowrap">
+                            <i class="fas fa-route mr-1"></i>Navigasi Peta
+                            </button>
                     </div>
                 </div>
              `).addTo(mainMap);
@@ -703,13 +703,18 @@
                 const currentLng = position.coords.longitude;
                 const currentLoc = L.latLng(currentLat, currentLng);
 
-                if (!routingControlPublik) {
-                    routingControlPublik = L.Routing.control({
-                        waypoints: [currentLoc, L.latLng(tujuanLat, tujuanLng)],
-                        createMarker: function() { return null; }, routeWhileDragging: false, addWaypoints: false,
-                        lineOptions: { styles: [{ color: '#3b82f6', opacity: 0.8, weight: 5 }] },
-                        router: L.Routing.osrmv1({ language: 'id', profile: 'driving' })
-                    }).addTo(publikMap);
+                routingControlPublik = L.Routing.control({
+                    waypoints: [currentLoc, L.latLng(tujuanLat, tujuanLng)],
+                    createMarker: function() { return null; },
+                    routeWhileDragging: false,
+                    addWaypoints: false,
+                    lineOptions: {
+                        styles: [{ color: '#3b82f6', opacity: 0.8, weight: 5 }]
+                    },
+                    router: L.Routing.osrmv1({
+                        profile: 'driving'
+                    })
+                }).addTo(publikMap);
 
                     routingControlPublik.on('routesfound', function(e) {
                         var routes = e.routes[0];
@@ -750,7 +755,7 @@
                 Swal.close();
                 Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Gagal mendeteksi lokasi. Pastikan GPS aktif.' });
             },
-            { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+            { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
         );
     }
 
@@ -886,18 +891,55 @@
                         const waypoints = routingControl.getWaypoints(); waypoints[0].latLng = L.latLng(currentLat, currentLng); routingControl.setWaypoints(waypoints);
                     } else { prosesBuatRute(currentLat, currentLng, destLat, destLng); }
                 },
-                (error) => { Swal.close(); prosesBuatRute(defaultCenter[0], defaultCenter[1], destLat, destLng); },
-                { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+                (error) => {
+    Swal.close();
+
+    let pesan = 'Gagal mendeteksi lokasi. Pastikan izin lokasi sudah aktif.';
+
+    if (error.code === 1) {
+        pesan = 'Akses lokasi ditolak. Izinkan lokasi pada browser terlebih dahulu.';
+    } else if (error.code === 2) {
+        pesan = 'Lokasi tidak tersedia. Pastikan GPS/perangkat lokasi aktif.';
+    } else if (error.code === 3) {
+        pesan = 'Deteksi lokasi terlalu lama. Coba ulangi beberapa detik lagi.';
+    }
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Lokasi Tidak Terbaca',
+        text: pesan
+    });
+},
+                { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
             );
         } else { prosesBuatRute(defaultCenter[0], defaultCenter[1], destLat, destLng); }
     }
 
+    function bukaDiWebGISPublik(id, lat, lng) {
+    switchTab('publik');
+
+    setTimeout(() => {
+        if (publikMap) {
+            publikMap.invalidateSize();
+            fokusKeMarkerPublik(id, lat, lng);
+        }
+    }, 400);
+}
+
     function prosesBuatRute(startLat, startLng, destLat, destLng) {
         routingControl = L.Routing.control({
-            waypoints: [ L.latLng(startLat, startLng), L.latLng(destLat, destLng) ],
-            routeWhileDragging: false, addWaypoints: false, collapsible: true, fitSelectedRoutes: true, language: 'id',
-            lineOptions: { styles: [{ color: '#10b981', weight: 6, opacity: 0.9 }] },
-            createMarker: function(i, waypoint, n) {
+            waypoints: [
+                L.latLng(startLat, startLng),
+                L.latLng(destLat, destLng)
+            ],
+    routeWhileDragging: false,
+    addWaypoints: false,
+    collapsible: true,
+    fitSelectedRoutes: true,
+    lineOptions: {
+        styles: [{ color: '#10b981', weight: 6, opacity: 0.9 }]
+    },
+    createMarker: function(i, waypoint, n) {
                 const iconColor = i === 0 ? '#3b82f6' : '#e11d48';
                 return L.marker(waypoint.latLng, { icon: L.divIcon({ className: 'custom-route-marker', html: `<div style="background-color:${iconColor}; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`, iconSize: [16, 16], iconAnchor: [8, 8] }) });
             }
